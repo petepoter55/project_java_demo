@@ -35,10 +35,15 @@ import java.util.Date;
 
 @Service
 public class ManageDetailImplement implements ManageDetailService {
+
+    private final ManagePeopleDetailRepository managePeopleDetailRepository;
+    private final UserRepository userRepository;
+
     @Autowired
-    ManagePeopleDetailRepository managePeopleDetailRepository;
-    @Autowired
-    UserRepository userRepository;
+    public ManageDetailImplement(ManagePeopleDetailRepository managePeopleDetailRepository,UserRepository userRepository){
+        this.managePeopleDetailRepository = managePeopleDetailRepository;
+        this.userRepository = userRepository;
+    }
 
     @Value("${jwt.secretkey}")
     private String jwtSecretkey;

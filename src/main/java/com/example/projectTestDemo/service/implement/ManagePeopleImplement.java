@@ -26,12 +26,17 @@ import java.util.List;
 @Service
 public class ManagePeopleImplement implements ManagePeopleService {
 
-    @Autowired
-    ManagePeopleDetailRepository managePeopleDetailRepository;
-    @Autowired
-    ManagePeopleVatRepository managePeopleVatRepository;
-    @Autowired
-    ManageMasterDistrictRepository manageMasterDistrictRepository;
+      private final ManagePeopleDetailRepository managePeopleDetailRepository;
+      private final ManagePeopleVatRepository managePeopleVatRepository;
+      private final ManageMasterDistrictRepository manageMasterDistrictRepository;
+
+      @Autowired
+      public ManagePeopleImplement(ManagePeopleDetailRepository managePeopleDetailRepository,ManagePeopleVatRepository managePeopleVatRepository,
+                                   ManageMasterDistrictRepository manageMasterDistrictRepository){
+          this.managePeopleDetailRepository = managePeopleDetailRepository;
+          this.managePeopleVatRepository = managePeopleVatRepository;
+          this.manageMasterDistrictRepository = manageMasterDistrictRepository;
+      }
 
     @Override
     public ManagePeopleViewResponse getDate(MangeRegisterRequest mangeRegisterRequest) {
