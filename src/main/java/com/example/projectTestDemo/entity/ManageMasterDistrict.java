@@ -28,4 +28,68 @@ public class ManageMasterDistrict {
     private String subProvinceCode;
     @Column(name = "PROVINCECODE")
     private String provinceCode;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNameEng() {
+        return nameEng;
+    }
+
+    public void setNameEng(String nameEng) {
+        this.nameEng = nameEng;
+    }
+
+    public int getSubproviceId() {
+        return subproviceId;
+    }
+
+    public void setSubproviceId(int subproviceId) {
+        this.subproviceId = subproviceId;
+    }
+
+    public int getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(int provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public String getSubProvinceCode() {
+        return subProvinceCode;
+    }
+
+    public void setSubProvinceCode(String subProvinceCode) {
+        this.subProvinceCode = subProvinceCode;
+    }
+
+    public String getProvinceCode() {
+        return provinceCode;
+    }
+
+    public void setProvinceCode(String provinceCode) {
+        this.provinceCode = provinceCode;
+    }
 }

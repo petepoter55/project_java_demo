@@ -1,12 +1,9 @@
 package com.example.projectTestDemo.dtoResponse;
 
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Date;
 
-@Getter
-@Setter
+
 public class ManagePeopleDetailResponse {
     private String manageTaxId;
     private String refNo;
@@ -28,7 +25,182 @@ public class ManagePeopleDetailResponse {
     private String newEmail;
     private String tel;
     private String telext;
-//    private Date lastUpdate;
     private Date createDateTime;
     private Date updateDateTime;
+
+    public String getManageTaxId() {
+        return manageTaxId;
+    }
+
+    public void setManageTaxId(String manageTaxId) {
+        this.manageTaxId = manageTaxId;
+    }
+
+    public String getRefNo() {
+        return refNo;
+    }
+
+    public void setRefNo(String refNo) {
+        this.refNo = refNo;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(String building) {
+        this.building = building;
+    }
+
+    public String getRoomNo() {
+        return roomNo;
+    }
+
+    public void setRoomNo(String roomNo) {
+        this.roomNo = roomNo;
+    }
+
+    public String getFloor() {
+        return floor;
+    }
+
+    public void setFloor(String floor) {
+        this.floor = floor;
+    }
+
+    public String getVillage() {
+        return village;
+    }
+
+    public void setVillage(String village) {
+        this.village = village;
+    }
+
+    public String getMoo() {
+        return moo;
+    }
+
+    public void setMoo(String moo) {
+        this.moo = moo;
+    }
+
+    public String getSoi() {
+        return soi;
+    }
+
+    public void setSoi(String soi) {
+        this.soi = soi;
+    }
+
+    public String getRoad() {
+        return road;
+    }
+
+    public void setRoad(String road) {
+        this.road = road;
+    }
+
+    public int getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(int districtId) {
+        this.districtId = districtId;
+    }
+
+    public int getSubProvinceId() {
+        return subProvinceId;
+    }
+
+    public void setSubProvinceId(int subProvinceId) {
+        this.subProvinceId = subProvinceId;
+    }
+
+    public int getProviceId() {
+        return proviceId;
+    }
+
+    public void setProviceId(int proviceId) {
+        this.proviceId = proviceId;
+    }
+
+    public String getPostCode() {
+        return postCode;
+    }
+
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNewEmail() {
+        return newEmail;
+    }
+
+    public void setNewEmail(String newEmail) {
+        this.newEmail = newEmail;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getTelext() {
+        return telext;
+    }
+
+    public void setTelext(String telext) {
+        this.telext = telext;
+    }
+
+    public Date getCreateDateTime() {
+        return createDateTime;
+    }
+
+    public void setCreateDateTime(Date createDateTime) {
+        this.createDateTime = createDateTime;
+    }
+
+    public Date getUpdateDateTime() {
+        return updateDateTime;
+    }
+
+    public void setUpdateDateTime(Date updateDateTime) {
+        this.updateDateTime = updateDateTime;
+    }
 }
