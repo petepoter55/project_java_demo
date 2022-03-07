@@ -154,7 +154,7 @@ public class ManageDetailImplement implements ManageDetailService {
     @Override
     public void exportExcel(ExportExcelRequest exportExcelRequest, HttpServletResponse response) {
         try {
-            this.exportSearch(response, exportExcelRequest);
+            this.exportSearchUserByApproved(response, exportExcelRequest);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -193,7 +193,7 @@ public class ManageDetailImplement implements ManageDetailService {
         return jwtResponse;
     }
 
-    public void exportSearch(HttpServletResponse response, ExportExcelRequest dto) throws IOException {
+    public void exportSearchUserByApproved(HttpServletResponse response, ExportExcelRequest dto) throws IOException {
         response.setHeader("Content-Type", "application/octet-stream");
         response.setHeader("Content-Disposition", "attachment; filename=" + "keyword_master" + ".xlsx");
         OutputStream outStream = null;
@@ -212,6 +212,7 @@ public class ManageDetailImplement implements ManageDetailService {
 
             Sheet sheet = workbook.createSheet("master");
 
+            // set style Header
             Font headerFont = workbook.createFont();
             headerFont.setBold(true);
             headerFont.setFontHeightInPoints((short) 14);
