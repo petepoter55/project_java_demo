@@ -1,6 +1,5 @@
 package com.example.projectTestDemo.service.implement;
 
-
 import com.example.projectTestDemo.dtoRequest.MangeRegisterRequest;
 import com.example.projectTestDemo.dtoResponse.ManagePeopleDetailResponse;
 import com.example.projectTestDemo.dtoResponse.ManagePeopleViewResponse;
@@ -21,22 +20,21 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 @Service
 public class ManagePeopleImplement implements ManagePeopleService {
 
-      private final ManagePeopleDetailRepository managePeopleDetailRepository;
-      private final ManagePeopleVatRepository managePeopleVatRepository;
-      private final ManageMasterDistrictRepository manageMasterDistrictRepository;
+    private final ManagePeopleDetailRepository managePeopleDetailRepository;
+    private final ManagePeopleVatRepository managePeopleVatRepository;
+    private final ManageMasterDistrictRepository manageMasterDistrictRepository;
 
-      @Autowired
-      public ManagePeopleImplement(ManagePeopleDetailRepository managePeopleDetailRepository,ManagePeopleVatRepository managePeopleVatRepository,
-                                   ManageMasterDistrictRepository manageMasterDistrictRepository){
-          this.managePeopleDetailRepository = managePeopleDetailRepository;
-          this.managePeopleVatRepository = managePeopleVatRepository;
-          this.manageMasterDistrictRepository = manageMasterDistrictRepository;
-      }
+    @Autowired
+    public ManagePeopleImplement(ManagePeopleDetailRepository managePeopleDetailRepository,
+            ManagePeopleVatRepository managePeopleVatRepository,
+            ManageMasterDistrictRepository manageMasterDistrictRepository) {
+        this.managePeopleDetailRepository = managePeopleDetailRepository;
+        this.managePeopleVatRepository = managePeopleVatRepository;
+        this.manageMasterDistrictRepository = manageMasterDistrictRepository;
+    }
 
     @Override
     public ManagePeopleViewResponse getDate(MangeRegisterRequest mangeRegisterRequest) {
@@ -48,13 +46,13 @@ public class ManagePeopleImplement implements ManagePeopleService {
 
         try {
             List<MangePeopleDetail> mangePeopleDetailList = this.managePeopleDetailRepository.searchByManagePeopleTaxIdLike(mangeRegisterRequest.getManageTaxId());
-            if(mangePeopleDetailList.size() > 0){
-                for(MangePeopleDetail data : mangePeopleDetailList){
+            if (mangePeopleDetailList.size() > 0) {
+                for (MangePeopleDetail data : mangePeopleDetailList) {
                     managePeopleDetailResponse = this.setObjectDetailView(data);
                     managePeopleDetailResponseList.add(managePeopleDetailResponse);
                 }
                 message = "ดึงข้อมูลสำเร็จ";
-            }else {
+            } else {
                 message = "ไม่พบข้อมูล";
                 status = false;
             }
@@ -62,7 +60,7 @@ public class ManagePeopleImplement implements ManagePeopleService {
             managePeopleViewResponse.setMessage(message);
             managePeopleViewResponse.setManagePeopleDetailResponse(managePeopleDetailResponseList);
 
-        }catch (ResponseException e){
+        } catch (ResponseException e) {
             e.printStackTrace();
             managePeopleViewResponse.setStatus(false);
             managePeopleViewResponse.setMessage(e.getMessage());
@@ -77,11 +75,11 @@ public class ManagePeopleImplement implements ManagePeopleService {
         try {
             this.managePeopleDetailRepository.deleteById(id);
 
-        }catch (ResponseException e){
+        } catch (ResponseException e) {
             e.printStackTrace();
-            return new Response(false,e.getMessage(),"500");
+            return new Response(false, e.getMessage(), "500");
         }
-        return new Response(true,"ลบข้อมูลสำเร็จ","200");
+        return new Response(true, "ลบข้อมูลสำเร็จ", "200");
     }
 
     @Override
@@ -90,18 +88,18 @@ public class ManagePeopleImplement implements ManagePeopleService {
         ManagePeopleVat managePeopleVat = this.managePeopleVatRepository.findByManagePeopleTaxId(mangeRegisterRequest.getManageTaxId());
 
         try {
-            if(managePeopleVat != null){
+            if (managePeopleVat != null) {
                 mangePeopleDetail = this.setObjectDetail(managePeopleVat);
                 this.managePeopleDetailRepository.save(mangePeopleDetail);
-            }else {
-                return new Response(false,"ไม่พบข้อมูลที่ทำการลงทะเบียน","500");
+            } else {
+                return new Response(false, "ไม่พบข้อมูลที่ทำการลงทะเบียน", "500");
             }
 
-        }catch (ResponseException | ParseException e){
+        } catch (ResponseException | ParseException e) {
             e.printStackTrace();
-            return new Response(false,e.getMessage(),"500");
+            return new Response(false, e.getMessage(), "500");
         }
-        return new Response(true,"ลงทะเบียนเรียบร้อบ","200");
+        return new Response(true, "ลงทะเบียนเรียบร้อบ", "200");
     }
 
     @Override
@@ -110,18 +108,18 @@ public class ManagePeopleImplement implements ManagePeopleService {
         try {
             mangePeopleDetail = this.managePeopleDetailRepository.findById(id);
 
-            if(mangePeopleDetail != null){
-//                mangePeopleDetail.setStatusId(1);
+            if (mangePeopleDetail != null) {
+                // mangePeopleDetail.setStatusId(1);
                 mangePeopleDetail.setUpdateDateTime(new UtilityTools().getFormatsDateMilli());
             }
 
-        }catch (ResponseException | ParseException e){
-           e.printStackTrace();
+        } catch (ResponseException | ParseException e) {
+            e.printStackTrace();
         }
 
         this.managePeopleDetailRepository.save(mangePeopleDetail);
 
-        return new Response(true,"อัปเดตข้อมูลเสร็จเรียบร้อย","200");
+        return new Response(true, "อัปเดตข้อมูลเสร็จเรียบร้อย", "200");
     }
 
     @Override
@@ -139,7 +137,7 @@ public class ManagePeopleImplement implements ManagePeopleService {
         mangePeopleDetail.setManagePeopleLastName(managePeopleVat.getManagePeopleLastName());
         mangePeopleDetail.setManagePeopleName(managePeopleVat.getManagePeopleName());
         mangePeopleDetail.setAddress(managePeopleVat.getAddress());
-        mangePeopleDetail.setBuilding(managePeopleVat.getBuilding());;
+        mangePeopleDetail.setBuilding(managePeopleVat.getBuilding());
         mangePeopleDetail.setMoo(managePeopleVat.getMoo());
         mangePeopleDetail.setFloor(managePeopleVat.getFloor());
         mangePeopleDetail.setPostCode(managePeopleVat.getPostCode());
@@ -157,7 +155,7 @@ public class ManagePeopleImplement implements ManagePeopleService {
         return mangePeopleDetail;
     }
 
-    public ManagePeopleDetailResponse setObjectDetailView(MangePeopleDetail mangePeopleDetail){
+    public ManagePeopleDetailResponse setObjectDetailView(MangePeopleDetail mangePeopleDetail) {
         ManagePeopleDetailResponse managePeopleDetailResponse = new ManagePeopleDetailResponse();
 
         managePeopleDetailResponse.setManageTaxId(mangePeopleDetail.getManagePeopleTaxId());

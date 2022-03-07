@@ -47,7 +47,8 @@ public class ManageDetailImplement implements ManageDetailService {
     private final UserRepository userRepository;
 
     @Autowired
-    public ManageDetailImplement(ManagePeopleDetailRepository managePeopleDetailRepository,UserRepository userRepository){
+    public ManageDetailImplement(ManagePeopleDetailRepository managePeopleDetailRepository,
+            UserRepository userRepository) {
         this.managePeopleDetailRepository = managePeopleDetailRepository;
         this.userRepository = userRepository;
     }
@@ -58,11 +59,11 @@ public class ManageDetailImplement implements ManageDetailService {
     @Override
     public String generateXml() throws JsonProcessingException {
         MangePeopleDetail mangePeopleDetail = this.managePeopleDetailRepository.findByRefNo("PE68");
-//        Solution 1
-//        XmlMapper xmlMapper = new XmlMapper();
-//        String personXml = xmlMapper.writeValueAsString(mangePeopleDetail);
+        // Solution 1
+        // XmlMapper xmlMapper = new XmlMapper();
+        // String personXml = xmlMapper.writeValueAsString(mangePeopleDetail);
         XStream xstream = new XStream(new StaxDriver());
-//        Solution2
+        // Solution2
         String dataXml = xstream.toXML(mangePeopleDetail);
         return dataXml;
     }
@@ -74,8 +75,8 @@ public class ManageDetailImplement implements ManageDetailService {
             Boolean checkObject = ObjectUtils.isEmpty(createAccountRequest);
             Boolean checkObject2 = ObjectUtils.isEmpty(mangePeopleDetail);
 
-            if(!checkObject && !checkObject2){
-                if(createAccountRequest.getPassword().equals(createAccountRequest.getConfirmPassword())){
+            if (!checkObject && !checkObject2) {
+                if (createAccountRequest.getPassword().equals(createAccountRequest.getConfirmPassword())) {
                     ManageUser user = new ManageUser();
                     String password = new UtilityTools().hashSha256(createAccountRequest.getPassword());
                     String username = "US" + createAccountRequest.getUsername();
@@ -92,24 +93,25 @@ public class ManageDetailImplement implements ManageDetailService {
                     user.setPostCode(mangePeopleDetail.getPostCode());
                     user.setCreateBy(BigInteger.valueOf(0));
                     user.setForceChangePassword(1);
-                    user.setToken_user(generate(username,mangePeopleDetail.getEmail(),mangePeopleDetail.getManagePeopleTaxId()));
+                    user.setToken_user(generate(username, mangePeopleDetail.getEmail(), mangePeopleDetail.getManagePeopleTaxId()));
                     this.userRepository.save(user);
-                }else {
-                    return new Response(false,"รหัสผ่านระบุไม่ถูกต้อง เนื่องจาก ระบุรหัสผ่านไม่ตรงกับยืนยันรหัสผ่าน","500");
+                } else {
+                    return new Response(false, "รหัสผ่านระบุไม่ถูกต้อง เนื่องจาก ระบุรหัสผ่านไม่ตรงกับยืนยันรหัสผ่าน",
+                            "500");
                 }
-            }else {
-                return new Response(false,"สร้างบัญชีผู้ใช้งานไม่สำเร็จ","500");
+            } else {
+                return new Response(false, "สร้างบัญชีผู้ใช้งานไม่สำเร็จ", "500");
             }
-        }catch (ResponseException | NoSuchAlgorithmException | UnsupportedEncodingException | ParseException e){
+        } catch (ResponseException | NoSuchAlgorithmException | UnsupportedEncodingException | ParseException e) {
             e.printStackTrace();
-            return new Response(false,"สร้างบัญชีผู้ใช้งานไม่สำเร็จ","500");
+            return new Response(false, "สร้างบัญชีผู้ใช้งานไม่สำเร็จ", "500");
         }
-        return new Response(true,"สร้างบัญชีผู้ใช้งานเสร็จเรียบร้อย","500");
+        return new Response(true, "สร้างบัญชีผู้ใช้งานเสร็จเรียบร้อย", "500");
     }
 
     @Override
     public String gen() {
-        return generate("test","2","001");
+        return generate("test", "2", "001");
     }
 
     @Override
@@ -117,20 +119,21 @@ public class ManageDetailImplement implements ManageDetailService {
         ManageUser manageUser = this.userRepository.findByUsername(loginRequest.getUsername());
         try {
             Boolean checkObject = ObjectUtils.isEmpty(manageUser);
-            if(!checkObject){
-                Boolean checkpass = new UtilityTools().checkPassphrases(manageUser.getPassword(),loginRequest.getPassword());
-                if(!checkpass){
-                    return new Response(false,"บัญชีผู้ใช้งานหรือ รหัสผ่านไม่ถูกต้องโปรดตรวจสอบ","500");
+            if (!checkObject) {
+                Boolean checkpass = new UtilityTools().checkPassphrases(manageUser.getPassword(),
+                        loginRequest.getPassword());
+                if (!checkpass) {
+                    return new Response(false, "บัญชีผู้ใช้งานหรือ รหัสผ่านไม่ถูกต้องโปรดตรวจสอบ", "500");
                 }
-            }else {
-                return new Response(false,"บัญชีผู้ใช้งานไม่มีในระบบ","500");
+            } else {
+                return new Response(false, "บัญชีผู้ใช้งานไม่มีในระบบ", "500");
             }
 
-        }catch (ResponseException | NoSuchAlgorithmException | UnsupportedEncodingException e){
+        } catch (ResponseException | NoSuchAlgorithmException | UnsupportedEncodingException e) {
             e.printStackTrace();
-            return new Response(false,"เข้าสู่ระบบไม่สำเร็จ","500");
+            return new Response(false, "เข้าสู่ระบบไม่สำเร็จ", "500");
         }
-        return new Response(true,"เข้าสู่ระบบสำเร็จ","200");
+        return new Response(true, "เข้าสู่ระบบสำเร็จ", "200");
     }
 
     @Override
@@ -138,11 +141,11 @@ public class ManageDetailImplement implements ManageDetailService {
         ManageUser manageUser = this.userRepository.findByUsername(loginRequest.getUsername());
         JwtResponse jwtResponse = new JwtResponse();
         try {
-          boolean checkUser = ObjectUtils.isEmpty(manageUser);
-          if(!checkUser){
-             jwtResponse = this.getDataJwt(manageUser.getToken_user());
-          }
-        }catch (ResponseException e){
+            boolean checkUser = ObjectUtils.isEmpty(manageUser);
+            if (!checkUser) {
+                jwtResponse = this.getDataJwt(manageUser.getToken_user());
+            }
+        } catch (ResponseException e) {
             e.printStackTrace();
         }
         return jwtResponse;
@@ -151,20 +154,19 @@ public class ManageDetailImplement implements ManageDetailService {
     @Override
     public void exportExcel(ExportExcelRequest exportExcelRequest, HttpServletResponse response) {
         try {
-               this.exportSearch(response,exportExcelRequest);
-        }catch (Exception e){
+            this.exportSearch(response, exportExcelRequest);
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
 
         }
     }
-
 
     public String generate(String username, String email, String managePeopleTaxId) {
         Calendar currentDate = Calendar.getInstance();
         Date date = currentDate.getTime();
 
-//        currentDate.add(Calendar.MINUTE,expire);
+        // currentDate.add(Calendar.MINUTE,expire);
 
         SecretKey key = Keys.hmacShaKeyFor(this.jwtSecretkey.getBytes(StandardCharsets.UTF_8));
         return Jwts.builder()
@@ -172,11 +174,11 @@ public class ManageDetailImplement implements ManageDetailService {
                 .claim("email", email)
                 .claim("managePeopleTaxId", managePeopleTaxId)
                 .setIssuedAt(date)
-//                .setExpiration(currentDate.getTime())
+                // .setExpiration(currentDate.getTime())
                 .signWith(key, SignatureAlgorithm.HS256).compact();
     }
 
-    public JwtResponse getDataJwt(String jwtToken){
+    public JwtResponse getDataJwt(String jwtToken) {
         JwtResponse jwtResponse = new JwtResponse();
         try {
             SecretKey key = Keys.hmacShaKeyFor(this.jwtSecretkey.getBytes(StandardCharsets.UTF_8));
@@ -185,7 +187,7 @@ public class ManageDetailImplement implements ManageDetailService {
             jwtResponse.setEmail(jws.getBody().get("email").toString());
             jwtResponse.setManagePeopleTaxId(jws.getBody().get("managePeopleTaxId").toString());
             jwtResponse.setIssueDate(jws.getBody().getIssuedAt());
-        }catch (ResponseException e){
+        } catch (ResponseException e) {
             e.printStackTrace();
         }
         return jwtResponse;
@@ -193,68 +195,67 @@ public class ManageDetailImplement implements ManageDetailService {
 
     public void exportSearch(HttpServletResponse response, ExportExcelRequest dto) throws IOException {
         response.setHeader("Content-Type", "application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment; filename=" + "keyword_master" +".xlsx");
+        response.setHeader("Content-Disposition", "attachment; filename=" + "keyword_master" + ".xlsx");
         OutputStream outStream = null;
 
-       try {
-           String[] columns = {
-                   "UID",
-                   "FirstName",
-                   "LastName"
-           };
+        try {
+            // fix column name
+            String[] columns = {
+                    "UID",
+                    "FirstName",
+                    "LastName"
+            };
 
-           Workbook workbook = new XSSFWorkbook();
+            Workbook workbook = new XSSFWorkbook();
 
-           CreationHelper createHelper = workbook.getCreationHelper();
+            CreationHelper createHelper = workbook.getCreationHelper();
 
-           Sheet sheet = workbook.createSheet("master");
+            Sheet sheet = workbook.createSheet("master");
 
-           Font headerFont = workbook.createFont();
-           headerFont.setBold(true);
-           headerFont.setFontHeightInPoints((short) 14);
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerFont.setFontHeightInPoints((short) 14);
 
-           CellStyle headerCellStyle = workbook.createCellStyle();
-           headerCellStyle.setFont(headerFont);
+            CellStyle headerCellStyle = workbook.createCellStyle();
+            headerCellStyle.setFont(headerFont);
 
-           Row headerRow = sheet.createRow(0);
+            Row headerRow = sheet.createRow(0);
 
-           for(int i = 0; i < columns.length; i++) {
-               Cell cell = headerRow.createCell(i);
-               cell.setCellValue(columns[i]);
-               cell.setCellStyle(headerCellStyle);
-           }
+            // create header cell
+            for (int i = 0; i < columns.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(columns[i]);
+                cell.setCellStyle(headerCellStyle);
+            }
 
-           int rowNum = 1;
+            int rowNum = 1;
 
-           List<ManageUser> list = this.userRepository.findByApproved(dto.getApproved());
+            List<ManageUser> list = this.userRepository.findByApproved(dto.getApproved());
 
-           for (ManageUser d: list){
-               Row row = sheet.createRow(rowNum++);
-               row.createCell(0).setCellValue(d.getUid().toString());
-               row.createCell(1).setCellValue(d.getFirstName());
-               row.createCell(2).setCellValue(d.getLastName());
-           }
+            // initialize data in row
+            for (ManageUser d : list) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(d.getUid().toString());
+                row.createCell(1).setCellValue(d.getFirstName());
+                row.createCell(2).setCellValue(d.getLastName());
+            }
 
+            for (int i = 0; i < columns.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
 
-           for(int i = 0; i < columns.length; i++) {
-               sheet.autoSizeColumn(i);
-           }
+            outStream = response.getOutputStream();
+            workbook.write(outStream);
+            outStream.flush();
+            workbook.close();
 
-           outStream = response.getOutputStream();
-           workbook.write(outStream);
-           outStream.flush();
-           workbook.close();
-
-       }catch (Exception e){
-           e.printStackTrace();
-       }finally {
-           if (outStream != null) {
-               outStream.close();
-           }
-       }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (outStream != null) {
+                outStream.close();
+            }
+        }
     }
 
-
 }
-
-
