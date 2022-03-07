@@ -1,9 +1,14 @@
 package com.example.projectTestDemo.tools;
 
 
+
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+
 import org.apache.tomcat.util.codec.binary.Base64;
+
+
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -17,6 +22,7 @@ import java.util.Date;
 import java.util.Random;
 
 public class UtilityTools {
+    private XSSFSheet sheet;
 
     public Date getFormatsDateMilli() throws ParseException {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -24,6 +30,14 @@ public class UtilityTools {
 
         Date dates = cal.getTime();
         return dates;
+    }
+
+    public String getFormatsDateMilliString() throws ParseException {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar cal = Calendar.getInstance();
+
+        Date dates = cal.getTime();
+        return df.format(dates);
     }
 
     public static boolean isNumberic(String number){
@@ -125,4 +139,7 @@ public class UtilityTools {
         String randomString = sb.toString();
         return randomString;
     }
+
+
+
 }

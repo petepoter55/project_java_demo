@@ -1,6 +1,7 @@
 package com.example.projectTestDemo.service.implement;
 
 import com.example.projectTestDemo.dtoRequest.CreateAccountRequest;
+import com.example.projectTestDemo.dtoRequest.ExportExcelRequest;
 import com.example.projectTestDemo.dtoRequest.LoginRequest;
 import com.example.projectTestDemo.dtoResponse.JwtResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
@@ -19,12 +20,17 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.crypto.SecretKey;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -32,6 +38,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ManageDetailImplement implements ManageDetailService {
@@ -141,6 +148,17 @@ public class ManageDetailImplement implements ManageDetailService {
         return jwtResponse;
     }
 
+    @Override
+    public void exportExcel(ExportExcelRequest exportExcelRequest, HttpServletResponse response) {
+        try {
+               this.exportSearch(response,exportExcelRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+
+        }
+    }
+
 
     public String generate(String username, String email, String managePeopleTaxId) {
         Calendar currentDate = Calendar.getInstance();
@@ -172,6 +190,71 @@ public class ManageDetailImplement implements ManageDetailService {
         }
         return jwtResponse;
     }
+
+    public void exportSearch(HttpServletResponse response, ExportExcelRequest dto) throws IOException {
+        response.setHeader("Content-Type", "application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=" + "keyword_master" +".xlsx");
+        OutputStream outStream = null;
+
+       try {
+           String[] columns = {
+                   "UID",
+                   "FirstName",
+                   "LastName"
+           };
+
+           Workbook workbook = new XSSFWorkbook();
+
+           CreationHelper createHelper = workbook.getCreationHelper();
+
+           Sheet sheet = workbook.createSheet("master");
+
+           Font headerFont = workbook.createFont();
+           headerFont.setBold(true);
+           headerFont.setFontHeightInPoints((short) 14);
+
+           CellStyle headerCellStyle = workbook.createCellStyle();
+           headerCellStyle.setFont(headerFont);
+
+           Row headerRow = sheet.createRow(0);
+
+           for(int i = 0; i < columns.length; i++) {
+               Cell cell = headerRow.createCell(i);
+               cell.setCellValue(columns[i]);
+               cell.setCellStyle(headerCellStyle);
+           }
+
+           int rowNum = 1;
+
+           List<ManageUser> list = this.userRepository.findByApproved(dto.getApproved());
+
+           for (ManageUser d: list){
+               Row row = sheet.createRow(rowNum++);
+               row.createCell(0).setCellValue(d.getUid().toString());
+               row.createCell(1).setCellValue(d.getFirstName());
+               row.createCell(2).setCellValue(d.getLastName());
+           }
+
+
+           for(int i = 0; i < columns.length; i++) {
+               sheet.autoSizeColumn(i);
+           }
+
+           outStream = response.getOutputStream();
+           workbook.write(outStream);
+           outStream.flush();
+           workbook.close();
+
+       }catch (Exception e){
+           e.printStackTrace();
+       }finally {
+           if (outStream != null) {
+               outStream.close();
+           }
+       }
+    }
+
+
 }
 
 

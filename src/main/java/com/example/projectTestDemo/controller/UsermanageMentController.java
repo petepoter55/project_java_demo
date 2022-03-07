@@ -1,22 +1,27 @@
 package com.example.projectTestDemo.controller;
 
 import com.example.projectTestDemo.dtoRequest.CreateAccountRequest;
+import com.example.projectTestDemo.dtoRequest.ExportExcelRequest;
 import com.example.projectTestDemo.dtoRequest.LoginRequest;
 import com.example.projectTestDemo.dtoResponse.JwtResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.service.ManageDetailService;
+import com.example.projectTestDemo.service.ManagePeopleService;
+import com.example.projectTestDemo.tools.UtilityTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
 
 @RestController
 @RequestMapping("/manage")
 public class UsermanageMentController {
     @Autowired
     ManageDetailService manageDetailService;
+    @Autowired
+    ManagePeopleService managePeopleService;
 
     @PostMapping(value = "/create-user" ,consumes = { MediaType.APPLICATION_JSON_VALUE })
     public Response createUsername(
@@ -37,5 +42,13 @@ public class UsermanageMentController {
             @RequestBody LoginRequest loginRequest
     ){
         return this.manageDetailService.getDataToken(loginRequest);
+    }
+
+    @GetMapping(value = "/export-excel" ,consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public void exportExcel(
+            HttpServletResponse response,
+            @RequestBody ExportExcelRequest exportExcelRequest
+    ) throws ParseException {
+        this.manageDetailService.exportExcel(exportExcelRequest, response);
     }
 }
