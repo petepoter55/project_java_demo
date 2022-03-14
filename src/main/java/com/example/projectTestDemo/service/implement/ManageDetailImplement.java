@@ -21,7 +21,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -162,30 +161,6 @@ public class ManageDetailImplement implements ManageDetailService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public String changeFormatXml(MultipartFile file) {
-        String message = "";
-        String message2 = "";
-        try {
-            if(!file.isEmpty() && file != null){
-                ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
-
-                // solution 1
-                message = new BufferedReader(
-                        new InputStreamReader(stream, StandardCharsets.UTF_8))
-                        .lines()
-                        .collect(Collectors.joining("\n"));
-                // solution 2
-                message2 = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
-            }else {
-                throw new Exception();
-            }
-        }catch (Exception e){
-          e.printStackTrace();
-        }
-        return message;
     }
 
     public String generate(String username, String email, String managePeopleTaxId) {

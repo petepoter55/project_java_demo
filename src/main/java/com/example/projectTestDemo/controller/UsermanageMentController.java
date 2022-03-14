@@ -5,7 +5,9 @@ import com.example.projectTestDemo.dtoRequest.ExportExcelRequest;
 import com.example.projectTestDemo.dtoRequest.LoginRequest;
 import com.example.projectTestDemo.dtoResponse.JwtResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
+import com.example.projectTestDemo.dtoResponse.ValidateXmlResponse;
 import com.example.projectTestDemo.service.ManageDetailService;
+import com.example.projectTestDemo.service.ManageFileXmlService;
 import com.example.projectTestDemo.service.ManagePeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.ParseException;
 
 @RestController
@@ -22,6 +25,8 @@ public class UsermanageMentController {
     ManageDetailService manageDetailService;
     @Autowired
     ManagePeopleService managePeopleService;
+    @Autowired
+    ManageFileXmlService manageFileXmlService;
 
     @PostMapping(value = "/create-user" ,consumes = { MediaType.APPLICATION_JSON_VALUE })
     public Response createUsername(
@@ -56,6 +61,14 @@ public class UsermanageMentController {
     public String changeFormatXML(
             @RequestParam("upFile") MultipartFile file
     ){
-        return this.manageDetailService.changeFormatXml(file);
+        return this.manageFileXmlService.changeFormatXml(file);
+    }
+
+    // validate element <soap:Envelope ....</soap:Envelope> Ex. <eb:MessageHeader
+    @PostMapping(value = "/validate-Ebxm")
+    public ValidateXmlResponse validateEbxml(
+            @RequestParam("data") String message
+    ) throws IOException {
+        return this.manageFileXmlService.validateEbXml(message);
     }
 }

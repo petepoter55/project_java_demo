@@ -25,5 +25,4 @@ public interface ManageDetailService {
 
     public void exportExcel(ExportExcelRequest exportExcelRequest, HttpServletResponse response);
 
-    public String changeFormatXml(MultipartFile file);
 }

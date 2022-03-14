@@ -7,9 +7,16 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 
-
+import javax.xml.XMLConstants;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -140,6 +147,21 @@ public class UtilityTools {
         return randomString;
     }
 
+    public static boolean doValidateXml(String xml) throws SAXException, IOException {
+        boolean status = false;
+        XMLReader parser = XMLReaderFactory.createXMLReader();
+        parser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        parser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        parser.setContentHandler(new DefaultHandler());
+        InputSource source = new InputSource(new ByteArrayInputStream(xml.getBytes("UTF-8")));
+        try {
+            parser.parse(source);
+            status = true;
+        } catch (Exception e) {
+             e.printStackTrace();
+        }
+        return status;
+    }
 
 
 }
