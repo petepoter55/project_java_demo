@@ -21,17 +21,17 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
@@ -39,6 +39,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ManageDetailImplement implements ManageDetailService {
@@ -72,17 +73,18 @@ public class ManageDetailImplement implements ManageDetailService {
     public Response createAccount(CreateAccountRequest createAccountRequest) {
         MangePeopleDetail mangePeopleDetail = this.managePeopleDetailRepository.findById(Integer.parseInt(createAccountRequest.getPeopleDetailId()));
         try {
+            UtilityTools utilityTools = new UtilityTools();
             Boolean checkObject = ObjectUtils.isEmpty(createAccountRequest);
             Boolean checkObject2 = ObjectUtils.isEmpty(mangePeopleDetail);
 
             if (!checkObject && !checkObject2) {
                 if (createAccountRequest.getPassword().equals(createAccountRequest.getConfirmPassword())) {
                     ManageUser user = new ManageUser();
-                    String password = new UtilityTools().hashSha256(createAccountRequest.getPassword());
+                    String password = utilityTools.hashSha256(createAccountRequest.getPassword());
                     String username = "US" + createAccountRequest.getUsername();
                     user.setUsername(username);
                     user.setPassword(password);
-                    user.setUcode(new UtilityTools().randomString(10));
+                    user.setUcode(utilityTools.randomString(10));
                     user.setCreateDate(new UtilityTools().getFormatsDateMilli());
                     user.setEmail(mangePeopleDetail.getEmail());
                     user.setApprovedDate(new UtilityTools().getFormatsDateMilli());
@@ -116,11 +118,13 @@ public class ManageDetailImplement implements ManageDetailService {
 
     @Override
     public Response login(LoginRequest loginRequest) {
+        UtilityTools utilityTools = new UtilityTools();
         ManageUser manageUser = this.userRepository.findByUsername(loginRequest.getUsername());
+        Boolean checkpass = true;
         try {
             Boolean checkObject = ObjectUtils.isEmpty(manageUser);
             if (!checkObject) {
-                Boolean checkpass = new UtilityTools().checkPassphrases(manageUser.getPassword(),
+                checkpass = utilityTools.checkPassphrases(manageUser.getPassword(),
                         loginRequest.getPassword());
                 if (!checkpass) {
                     return new Response(false, "บัญชีผู้ใช้งานหรือ รหัสผ่านไม่ถูกต้องโปรดตรวจสอบ", "500");
@@ -157,16 +161,36 @@ public class ManageDetailImplement implements ManageDetailService {
             this.exportSearchUserByApproved(response, exportExcelRequest);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-
         }
+    }
+
+    @Override
+    public String changeFormatXml(MultipartFile file) {
+        String message = "";
+        String message2 = "";
+        try {
+            if(!file.isEmpty() && file != null){
+                ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
+
+                // solution 1
+                message = new BufferedReader(
+                        new InputStreamReader(stream, StandardCharsets.UTF_8))
+                        .lines()
+                        .collect(Collectors.joining("\n"));
+                // solution 2
+                message2 = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+            }else {
+                throw new Exception();
+            }
+        }catch (Exception e){
+          e.printStackTrace();
+        }
+        return message;
     }
 
     public String generate(String username, String email, String managePeopleTaxId) {
         Calendar currentDate = Calendar.getInstance();
         Date date = currentDate.getTime();
-
-        // currentDate.add(Calendar.MINUTE,expire);
 
         SecretKey key = Keys.hmacShaKeyFor(this.jwtSecretkey.getBytes(StandardCharsets.UTF_8));
         return Jwts.builder()
@@ -174,7 +198,6 @@ public class ManageDetailImplement implements ManageDetailService {
                 .claim("email", email)
                 .claim("managePeopleTaxId", managePeopleTaxId)
                 .setIssuedAt(date)
-                // .setExpiration(currentDate.getTime())
                 .signWith(key, SignatureAlgorithm.HS256).compact();
     }
 
@@ -245,6 +268,7 @@ public class ManageDetailImplement implements ManageDetailService {
                 sheet.autoSizeColumn(i);
             }
 
+            // output response file name
             outStream = response.getOutputStream();
             workbook.write(outStream);
             outStream.flush();

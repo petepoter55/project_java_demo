@@ -7,10 +7,10 @@ import com.example.projectTestDemo.dtoResponse.JwtResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.service.ManageDetailService;
 import com.example.projectTestDemo.service.ManagePeopleService;
-import com.example.projectTestDemo.tools.UtilityTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
@@ -50,5 +50,12 @@ public class UsermanageMentController {
             @RequestBody ExportExcelRequest exportExcelRequest
     ) throws ParseException {
         this.manageDetailService.exportExcel(exportExcelRequest, response);
+    }
+
+    @PostMapping(value = "/change-formatXml")
+    public String changeFormatXML(
+            @RequestParam("upFile") MultipartFile file
+    ){
+        return this.manageDetailService.changeFormatXml(file);
     }
 }
