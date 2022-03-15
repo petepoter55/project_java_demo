@@ -1,9 +1,8 @@
 package com.example.projectTestDemo.service.implement;
 
-import com.example.projectTestDemo.dtoResponse.Response;
+
 import com.example.projectTestDemo.dtoResponse.ValidateXmlResponse;
 import com.example.projectTestDemo.entity.ManageConfigXpath;
-import com.example.projectTestDemo.entity.ManageDocumentType;
 import com.example.projectTestDemo.repository.ManageConfigXpathRepository;
 import com.example.projectTestDemo.repository.ManageDocumentTypeRepository;
 import com.example.projectTestDemo.service.ManageFileXmlService;
@@ -16,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Service
 public class ManageFileXmLlmplement implements ManageFileXmlService {

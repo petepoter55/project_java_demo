@@ -21,12 +21,15 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletResponse;
@@ -35,10 +38,11 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class ManageDetailImplement implements ManageDetailService {
@@ -163,6 +167,12 @@ public class ManageDetailImplement implements ManageDetailService {
         }
     }
 
+    @Override
+    public List<ManageUser> importExcel(MultipartFile file) throws IOException {
+        List<ManageUser> manageUserList = this.importDataExcel(file);
+        return manageUserList;
+    }
+
     public String generate(String username, String email, String managePeopleTaxId) {
         Calendar currentDate = Calendar.getInstance();
         Date date = currentDate.getTime();
@@ -256,6 +266,31 @@ public class ManageDetailImplement implements ManageDetailService {
                 outStream.close();
             }
         }
+    }
+
+    public List<ManageUser> importDataExcel (MultipartFile files) throws IOException {
+        List<ManageUser> manageUserList = new ArrayList<>();
+        XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
+        XSSFSheet worksheet = workbook.getSheetAt(0);
+        try {
+            for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
+                if (index > 0) {
+                    ManageUser manageUser = new ManageUser();
+
+                    XSSFRow row = worksheet.getRow(index);
+
+                    manageUser.setUid(new BigInteger(row.getCell(0).getStringCellValue()));
+                    manageUser.setFirstName(row.getCell(1).getStringCellValue());
+                    manageUser.setLastName(row.getCell(2).getStringCellValue());
+                    manageUserList.add(manageUser);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            workbook.close();
+        }
+        return manageUserList;
     }
 
 }

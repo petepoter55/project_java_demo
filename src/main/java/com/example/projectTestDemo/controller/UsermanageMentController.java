@@ -6,6 +6,7 @@ import com.example.projectTestDemo.dtoRequest.LoginRequest;
 import com.example.projectTestDemo.dtoResponse.JwtResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.dtoResponse.ValidateXmlResponse;
+import com.example.projectTestDemo.entity.ManageUser;
 import com.example.projectTestDemo.service.ManageDetailService;
 import com.example.projectTestDemo.service.ManageFileXmlService;
 import com.example.projectTestDemo.service.ManagePeopleService;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/manage")
@@ -55,6 +57,13 @@ public class UsermanageMentController {
             @RequestBody ExportExcelRequest exportExcelRequest
     ) throws ParseException {
         this.manageDetailService.exportExcel(exportExcelRequest, response);
+    }
+
+    @PostMapping(value = "/import-excel")
+    public List<ManageUser> importExcel(
+            @RequestParam("upFile") MultipartFile file
+    ) throws ParseException, IOException {
+        return this.manageDetailService.importExcel(file);
     }
 
     @PostMapping(value = "/change-formatXml")

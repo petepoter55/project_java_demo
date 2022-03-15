@@ -28,7 +28,6 @@ public class RetrieveXPath {
         factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
         DocumentBuilder builder = factory.newDocumentBuilder();
         docXml = builder.parse(input);
-        // System.out.println(docXml);
     }
 
     //get data By Xpath
