@@ -3,6 +3,7 @@ package com.example.projectTestDemo.controller;
 import com.example.projectTestDemo.dtoRequest.CreateAccountRequest;
 import com.example.projectTestDemo.dtoRequest.ExportExcelRequest;
 import com.example.projectTestDemo.dtoRequest.LoginRequest;
+import com.example.projectTestDemo.dtoResponse.ImportExcelManageUserResponse;
 import com.example.projectTestDemo.dtoResponse.JwtResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.dtoResponse.ValidateXmlResponse;
@@ -60,7 +61,7 @@ public class UsermanageMentController {
     }
 
     @PostMapping(value = "/import-excel")
-    public List<ManageUser> importExcel(
+    public ImportExcelManageUserResponse importExcel(
             @RequestParam("upFile") MultipartFile file
     ) throws ParseException, IOException {
         return this.manageDetailService.importExcel(file);

@@ -4,6 +4,7 @@ import com.example.projectTestDemo.dtoRequest.CreateAccountRequest;
 import com.example.projectTestDemo.dtoRequest.ExportExcelRequest;
 import com.example.projectTestDemo.dtoRequest.LoginRequest;
 import com.example.projectTestDemo.dtoRequest.ManageDetailGenXmlRequest;
+import com.example.projectTestDemo.dtoResponse.ImportExcelManageUserResponse;
 import com.example.projectTestDemo.dtoResponse.JwtResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.entity.ManageUser;
@@ -28,5 +29,5 @@ public interface ManageDetailService {
 
     public void exportExcel(ExportExcelRequest exportExcelRequest, HttpServletResponse response);
 
-    public List<ManageUser> importExcel(MultipartFile file) throws IOException;
+    public ImportExcelManageUserResponse importExcel(MultipartFile file) throws IOException;
 }

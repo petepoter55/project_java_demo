@@ -3,6 +3,7 @@ package com.example.projectTestDemo.service.implement;
 import com.example.projectTestDemo.dtoRequest.CreateAccountRequest;
 import com.example.projectTestDemo.dtoRequest.ExportExcelRequest;
 import com.example.projectTestDemo.dtoRequest.LoginRequest;
+import com.example.projectTestDemo.dtoResponse.ImportExcelManageUserResponse;
 import com.example.projectTestDemo.dtoResponse.JwtResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.entity.MangePeopleDetail;
@@ -168,8 +169,14 @@ public class ManageDetailImplement implements ManageDetailService {
     }
 
     @Override
-    public List<ManageUser> importExcel(MultipartFile file) throws IOException {
-        List<ManageUser> manageUserList = this.importDataExcel(file);
+    public ImportExcelManageUserResponse importExcel(MultipartFile file) throws IOException {
+        ImportExcelManageUserResponse manageUserList;
+        if(("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet").equals(file.getContentType())){
+             manageUserList = this.importDataExcel(file);
+        }else {
+            return new ImportExcelManageUserResponse(false, "import fail Because file not Excel", "500",null);
+
+        }
         return manageUserList;
     }
 
@@ -268,9 +275,10 @@ public class ManageDetailImplement implements ManageDetailService {
         }
     }
 
-    public List<ManageUser> importDataExcel (MultipartFile files) throws IOException {
+    public ImportExcelManageUserResponse importDataExcel(MultipartFile files) throws IOException {
         List<ManageUser> manageUserList = new ArrayList<>();
         XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
+        // get sheet in Excel By index
         XSSFSheet worksheet = workbook.getSheetAt(0);
         try {
             for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
@@ -285,12 +293,12 @@ public class ManageDetailImplement implements ManageDetailService {
                     manageUserList.add(manageUser);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             workbook.close();
         }
-        return manageUserList;
+        return new ImportExcelManageUserResponse(true, "import success", "200",manageUserList);
     }
 
 }
