@@ -21,6 +21,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -47,7 +48,7 @@ import java.util.List;
 
 @Service
 public class ManageDetailImplement implements ManageDetailService {
-
+    private static final Logger logger = Logger.getLogger(ManageDetailImplement.class);
     private final ManagePeopleDetailRepository managePeopleDetailRepository;
     private final UserRepository userRepository;
 
@@ -122,14 +123,18 @@ public class ManageDetailImplement implements ManageDetailService {
 
     @Override
     public Response login(LoginRequest loginRequest) {
+        logger.info("===== Start Login =======");
+        logger.info("username : " + loginRequest.getUsername());
         UtilityTools utilityTools = new UtilityTools();
         ManageUser manageUser = this.userRepository.findByUsername(loginRequest.getUsername());
         Boolean checkpass = true;
         try {
             Boolean checkObject = ObjectUtils.isEmpty(manageUser);
+            logger.info("checkObject : " + checkObject);
             if (!checkObject) {
                 checkpass = utilityTools.checkPassphrases(manageUser.getPassword(),
                         loginRequest.getPassword());
+                logger.info("checkpass : " + checkpass);
                 if (!checkpass) {
                     return new Response(false, "บัญชีผู้ใช้งานหรือ รหัสผ่านไม่ถูกต้องโปรดตรวจสอบ", "500");
                 }
@@ -141,6 +146,7 @@ public class ManageDetailImplement implements ManageDetailService {
             e.printStackTrace();
             return new Response(false, "เข้าสู่ระบบไม่สำเร็จ", "500");
         }
+        logger.info("===== End Login =======");
         return new Response(true, "เข้าสู่ระบบสำเร็จ", "200");
     }
 
