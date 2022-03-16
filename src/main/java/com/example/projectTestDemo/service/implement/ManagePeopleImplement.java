@@ -13,6 +13,7 @@ import com.example.projectTestDemo.repository.ManagePeopleDetailRepository;
 import com.example.projectTestDemo.repository.ManagePeopleVatRepository;
 import com.example.projectTestDemo.service.ManagePeopleService;
 import com.example.projectTestDemo.tools.UtilityTools;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ import java.util.List;
 
 @Service
 public class ManagePeopleImplement implements ManagePeopleService {
-
+    private static final Logger logger = Logger.getLogger(ManagePeopleImplement.class);
     private final ManagePeopleDetailRepository managePeopleDetailRepository;
     private final ManagePeopleVatRepository managePeopleVatRepository;
     private final ManageMasterDistrictRepository manageMasterDistrictRepository;
@@ -38,6 +39,8 @@ public class ManagePeopleImplement implements ManagePeopleService {
 
     @Override
     public ManagePeopleViewResponse getDate(MangeRegisterRequest mangeRegisterRequest) {
+        logger.info("===== Start GetData ManagePeopleDetail=======");
+        logger.info("manageTaxId : " + mangeRegisterRequest.getManageTaxId());
         List<ManagePeopleDetailResponse> managePeopleDetailResponseList = new ArrayList<>();
         ManagePeopleDetailResponse managePeopleDetailResponse = new ManagePeopleDetailResponse();
         ManagePeopleViewResponse managePeopleViewResponse = new ManagePeopleViewResponse();
@@ -66,6 +69,8 @@ public class ManagePeopleImplement implements ManagePeopleService {
             managePeopleViewResponse.setMessage(e.getMessage());
             managePeopleViewResponse.setManagePeopleDetailResponse(null);
         }
+        logger.info("status message : " + managePeopleViewResponse.getMessage());
+        logger.info("===== Done GetData ManagePeopleDetail=======");
         return managePeopleViewResponse;
     }
 

@@ -8,6 +8,7 @@ import com.example.projectTestDemo.repository.ManageDocumentTypeRepository;
 import com.example.projectTestDemo.service.ManageFileXmlService;
 import com.example.projectTestDemo.tools.RetrieveXPath;
 import com.example.projectTestDemo.tools.UtilityTools;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +20,7 @@ import java.util.*;
 
 @Service
 public class ManageFileXmLlmplement implements ManageFileXmlService {
-
+    private static final Logger logger = Logger.getLogger(ManageFileXmLlmplement.class);
     @Autowired
     ManageConfigXpathRepository manageConfigXpathRepository;
     @Autowired
@@ -53,6 +54,8 @@ public class ManageFileXmLlmplement implements ManageFileXmlService {
 
     @Override
     public ValidateXmlResponse validateEbXml(String message) throws IOException {
+        logger.info("===== Start validateEbXml =======");
+        logger.info("xml :" + message);
         InputStream inputStreamXmlSignXpath = null;
         HashMap<String, String> result = new LinkedHashMap<String, String>();
 
@@ -82,6 +85,7 @@ public class ManageFileXmLlmplement implements ManageFileXmlService {
                 inputStreamXmlSignXpath.close();
             }
         }
+        logger.info("===== Done validateEbXml =======");
         return new ValidateXmlResponse(true, "validate xml success", "200", result);
     }
 

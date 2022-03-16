@@ -76,6 +76,8 @@ public class ManageDetailImplement implements ManageDetailService {
 
     @Override
     public Response createAccount(CreateAccountRequest createAccountRequest) {
+        logger.info("===== Start CreateAccount =======");
+        logger.info("username : " + createAccountRequest.getUsername());
         MangePeopleDetail mangePeopleDetail = this.managePeopleDetailRepository.findById(Integer.parseInt(createAccountRequest.getPeopleDetailId()));
         try {
             UtilityTools utilityTools = new UtilityTools();
@@ -83,6 +85,9 @@ public class ManageDetailImplement implements ManageDetailService {
             Boolean checkObject2 = ObjectUtils.isEmpty(mangePeopleDetail);
 
             if (!checkObject && !checkObject2) {
+                logger.info("MangePeopleDetail FirstName: " + mangePeopleDetail.getManagePeopleName());
+                logger.info("MangePeopleDetail LastName: " + mangePeopleDetail.getManagePeopleLastName());
+
                 if (createAccountRequest.getPassword().equals(createAccountRequest.getConfirmPassword())) {
                     ManageUser user = new ManageUser();
                     String password = utilityTools.hashSha256(createAccountRequest.getPassword());
@@ -113,6 +118,7 @@ public class ManageDetailImplement implements ManageDetailService {
             e.printStackTrace();
             return new Response(false, "สร้างบัญชีผู้ใช้งานไม่สำเร็จ", "500");
         }
+        logger.info("===== End CreateAccount =======");
         return new Response(true, "สร้างบัญชีผู้ใช้งานเสร็จเรียบร้อย", "500");
     }
 
