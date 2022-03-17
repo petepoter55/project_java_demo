@@ -11,6 +11,7 @@ import com.example.projectTestDemo.entity.ManageUser;
 import com.example.projectTestDemo.service.ManageDetailService;
 import com.example.projectTestDemo.service.ManageFileXmlService;
 import com.example.projectTestDemo.service.ManagePeopleService;
+import com.example.projectTestDemo.service.ManageZipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,8 @@ public class UsermanageMentController {
     ManagePeopleService managePeopleService;
     @Autowired
     ManageFileXmlService manageFileXmlService;
+    @Autowired
+    ManageZipService manageZipService;
 
     @PostMapping(value = "/create-user" ,consumes = { MediaType.APPLICATION_JSON_VALUE })
     public Response createUsername(
@@ -80,5 +83,12 @@ public class UsermanageMentController {
             @RequestParam("data") String message
     ) throws IOException {
         return this.manageFileXmlService.validateEbXml(message);
+    }
+
+    @PostMapping(value = "/upload-zipfile")
+    public Response uploadZipFile(
+            @RequestParam("upFile") MultipartFile file
+    ){
+        return this.manageZipService.uploadZipFile(file);
     }
 }
