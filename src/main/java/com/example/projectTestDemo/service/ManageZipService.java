@@ -5,4 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ManageZipService {
     public Response uploadZipFile(MultipartFile file);
+
+    public void unzipTest();
 }

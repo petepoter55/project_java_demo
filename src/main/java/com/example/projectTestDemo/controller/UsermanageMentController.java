@@ -91,4 +91,11 @@ public class UsermanageMentController {
     ){
         return this.manageZipService.uploadZipFile(file);
     }
+
+    @PostMapping(value = "/unzip-zipfile")
+    public void unzipZipFile(
+
+    ){
+        this.manageZipService.unzipTest();
+    }
 }

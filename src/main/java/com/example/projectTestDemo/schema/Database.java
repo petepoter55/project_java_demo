@@ -7,4 +7,6 @@ public class Database {
     public static final String USER = "MANAGE";
     public static final String CONFIG_XPATH = "MANAGE";
     public static final String DOCUMENT_TYPE = "MANAGE";
+    public static final String UPLOADXML_TRACKING = "MANAGE";
+    public static final String UPLOAD_TEMP = "MANAGE";
 }
