@@ -3,6 +3,7 @@ package com.example.projectTestDemo.controller;
 import com.example.projectTestDemo.dtoRequest.CreateAccountRequest;
 import com.example.projectTestDemo.dtoRequest.ExportExcelRequest;
 import com.example.projectTestDemo.dtoRequest.LoginRequest;
+import com.example.projectTestDemo.dtoRequest.UnzipRequest;
 import com.example.projectTestDemo.dtoResponse.ImportExcelManageUserResponse;
 import com.example.projectTestDemo.dtoResponse.JwtResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
@@ -12,6 +13,7 @@ import com.example.projectTestDemo.service.ManageDetailService;
 import com.example.projectTestDemo.service.ManageFileXmlService;
 import com.example.projectTestDemo.service.ManagePeopleService;
 import com.example.projectTestDemo.service.ManageZipService;
+import com.example.projectTestDemo.service.implement.ManageZipImplement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,8 @@ public class UsermanageMentController {
     ManageFileXmlService manageFileXmlService;
     @Autowired
     ManageZipService manageZipService;
+    @Autowired
+    ManageZipImplement manageZipImplement;
 
     @PostMapping(value = "/create-user" ,consumes = { MediaType.APPLICATION_JSON_VALUE })
     public Response createUsername(
@@ -92,10 +96,17 @@ public class UsermanageMentController {
         return this.manageZipService.uploadZipFile(file);
     }
 
-    @PostMapping(value = "/unzip-zipfile")
+    @PostMapping(value = "/unzip-zipfile",consumes = { MediaType.APPLICATION_JSON_VALUE })
     public void unzipZipFile(
+            @RequestBody UnzipRequest unzipRequest
+    ){
+        this.manageZipService.unzipTest(unzipRequest);
+    }
+
+    @PostMapping(value = "/unzip-validateTest")
+    public List<String> unzipZipFileTest(
 
     ){
-        this.manageZipService.unzipTest();
+        return this.manageZipImplement.validateFile();
     }
 }

@@ -35,6 +35,9 @@ public class ManageUploadTracking {
     private String fileFail;
     @Column(name = "CREATEDATETIME")
     private Date createDateTime;
+    @Column(name = "PATHNAME")
+    private String pathName;
+
 
     public int getId() {
         return id;
@@ -122,5 +125,13 @@ public class ManageUploadTracking {
 
     public void setCreateDateTime(Date createDateTime) {
         this.createDateTime = createDateTime;
+    }
+
+    public String getPathName() {
+        return pathName;
+    }
+
+    public void setPathName(String pathName) {
+        this.pathName = pathName;
     }
 }

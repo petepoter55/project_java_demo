@@ -1,13 +1,17 @@
 package com.example.projectTestDemo.service.implement;
 
+import com.example.projectTestDemo.dtoRequest.UnzipRequest;
 import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.entity.ManageUploadTracking;
 import com.example.projectTestDemo.repository.ManageUploadTrackingRepository;
 import com.example.projectTestDemo.service.ManageZipService;
 import com.example.projectTestDemo.tools.UtilityTools;
 import org.apache.log4j.Logger;
+import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -18,12 +22,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 @Service
 public class ManageZipImplement implements ManageZipService {
     private static final Logger logger = Logger.getLogger(ManageZipImplement.class);
+
+    @Value("${path.unzip}")
+    private String pathUnzip;
 
     @Autowired
     ManageUploadTrackingRepository manageUploadTrackingRepository;
@@ -59,6 +68,7 @@ public class ManageZipImplement implements ManageZipService {
                 manageUploadTracking.setSendDate(new UtilityTools().getFormatsDateMilli());
                 manageUploadTracking.setStatus(99);
                 manageUploadTracking.setCreateDateTime(new UtilityTools().getFormatsDateMilli());
+                manageUploadTracking.setPathName(this.pathUnzip + "/" +file.getOriginalFilename());
                 this.manageUploadTrackingRepository.save(manageUploadTracking);
             }
         }catch (Exception e){
@@ -70,12 +80,27 @@ public class ManageZipImplement implements ManageZipService {
     }
 
     @Override
-    public void unzipTest() {
-        this.unzip();
+    public void unzipTest(UnzipRequest unzipRequest) {
+        logger.info("============================= Start UNZIP ==============================");
+        logger.info("uploadTracking ID : " + unzipRequest.getUploadTrackingId());
+        ManageUploadTracking manageUploadTracking = new ManageUploadTracking();
+        try {
+            manageUploadTracking = this.manageUploadTrackingRepository.getById(unzipRequest.getUploadTrackingId());
+            boolean checkObject = ObjectUtils.isEmpty(manageUploadTracking);
+            if(!checkObject){
+                boolean unzip_status = this.unzip(manageUploadTracking);
+                if(unzip_status){
+//                    this.validateFile();
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        logger.info("============================= Done UNZIP ==============================");
     }
 
     public void insertFileToDir(String fileName,byte[] file) throws IOException {
-        String rootDir = "/Users/boonyaris/Desktop/zipproject";
+        String rootDir = this.pathUnzip;
 
         Path path = Paths.get(rootDir);
         // check have directory? or have File?
@@ -99,9 +124,12 @@ public class ManageZipImplement implements ManageZipService {
         }
     }
 
-    public void unzip(){
+    public boolean unzip(ManageUploadTracking manageUploadTracking){
+        logger.info("pathName : " + manageUploadTracking.getPathName());
+        logger.info("fileName : " + manageUploadTracking.getFileName());
+        boolean statusUnzip = true;
         try {
-            String fileZip = "/Users/boonyaris/Desktop/zipproject/etaxinvoiceschema.zip";
+            String fileZip = manageUploadTracking.getPathName();
             File destinationDirectory = new File("/Users/boonyaris/Desktop/zipproject/unzip");
             byte[] buffer = new byte[1024];
             ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));
@@ -134,7 +162,10 @@ public class ManageZipImplement implements ManageZipService {
 
         }catch (Exception ex){
             ex.printStackTrace();
+            statusUnzip = false;
         }
+
+        return statusUnzip;
     }
 
     public static File newFile(File destinationDirectory, ZipEntry zipEntry) throws IOException {
@@ -148,5 +179,20 @@ public class ManageZipImplement implements ManageZipService {
         }
 
         return destFile;
+    }
+
+    public List<String> validateFile(){
+        List<String> fileName = new ArrayList<>();
+        File[] destinationDirectory = new File("/Users/boonyaris/Desktop/zipproject/unzip").listFiles();
+        try {
+           for(File d : destinationDirectory){
+               fileName.add(d.getName());
+           }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+
+        }
+        return fileName;
     }
 }
