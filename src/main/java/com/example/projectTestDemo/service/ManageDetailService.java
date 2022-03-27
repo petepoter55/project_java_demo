@@ -30,4 +30,6 @@ public interface ManageDetailService {
     public void exportExcel(ExportExcelRequest exportExcelRequest, HttpServletResponse response);
 
     public ImportExcelManageUserResponse importExcel(MultipartFile file) throws IOException;
+
+    public Response sendMessageToQueue();
 }

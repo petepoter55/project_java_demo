@@ -9,6 +9,7 @@ import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.entity.MangePeopleDetail;
 import com.example.projectTestDemo.entity.ManageUser;
 import com.example.projectTestDemo.exception.ResponseException;
+import com.example.projectTestDemo.queue.Push;
 import com.example.projectTestDemo.repository.ManagePeopleDetailRepository;
 import com.example.projectTestDemo.repository.UserRepository;
 import com.example.projectTestDemo.service.ManageDetailService;
@@ -26,6 +27,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -51,12 +53,14 @@ public class ManageDetailImplement implements ManageDetailService {
     private static final Logger logger = Logger.getLogger(ManageDetailImplement.class);
     private final ManagePeopleDetailRepository managePeopleDetailRepository;
     private final UserRepository userRepository;
+    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     public ManageDetailImplement(ManagePeopleDetailRepository managePeopleDetailRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,RabbitTemplate rabbitTemplate) {
         this.managePeopleDetailRepository = managePeopleDetailRepository;
         this.userRepository = userRepository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Value("${jwt.secretkey}")
@@ -190,6 +194,22 @@ public class ManageDetailImplement implements ManageDetailService {
 
         }
         return manageUserList;
+    }
+
+    @Override
+    public Response sendMessageToQueue() {
+        MangePeopleDetail mangePeopleDetail = this.managePeopleDetailRepository.findById(1);
+
+        try {
+            if(mangePeopleDetail != null){
+                Push push = new Push(rabbitTemplate);
+                push.requestUpdateManage(mangePeopleDetail);
+            }
+        }catch (ResponseException e){
+            e.printStackTrace();
+            return new Response(false, "ส่งไม่สำเร็จ", "500");
+        }
+        return new Response(true, "ส่งสำเร็จ", "200");
     }
 
     public String generate(String username, String email, String managePeopleTaxId) {

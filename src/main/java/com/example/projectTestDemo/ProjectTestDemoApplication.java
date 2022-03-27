@@ -23,8 +23,7 @@ public class ProjectTestDemoApplication extends SpringBootServletInitializer {
 	}
 
 	@Bean
-	SimpleMessageListenerContainer containerUpdateManageDetail(ConnectionFactory connectionFactory,
-															 MessageListenerAdapter listenerAdapterUpdateManageDetail) {
+	SimpleMessageListenerContainer containerUpdateManageDetail(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapterUpdateManageDetail) {
 		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
 		container.setConnectionFactory(connectionFactory);
 		container.setQueueNames(queueUpdateManage);

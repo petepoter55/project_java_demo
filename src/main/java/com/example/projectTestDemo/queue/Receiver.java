@@ -10,7 +10,9 @@ public class Receiver {
     public void receiveUpdateManageDetail(Object message) {
         try {
             MangePeopleDetail mangePeopleDetail = new ObjectMapper().readValue(message.toString(), MangePeopleDetail.class);
-            System.out.println("Hello Rabbit MQ");
+            if(mangePeopleDetail != null){
+                System.out.println("Hello Rabbit MQ");
+            }
         } catch (Exception e) {
           e.printStackTrace();
         }

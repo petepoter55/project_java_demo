@@ -4,7 +4,6 @@ import com.example.projectTestDemo.dtoRequest.ManageDetailGenXmlRequest;
 import com.example.projectTestDemo.dtoRequest.MangeRegisterRequest;
 import com.example.projectTestDemo.dtoResponse.ManagePeopleViewResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
-import com.example.projectTestDemo.entity.ManageMasterDistrict;
 import com.example.projectTestDemo.repository.ManageMasterDistrictRepository;
 import com.example.projectTestDemo.service.ManageDetailService;
 import com.example.projectTestDemo.service.ManagePeopleService;
@@ -68,6 +67,12 @@ public class MangePeopleController {
             @RequestBody ManageDetailGenXmlRequest manageDetailGenXmlRequest
     ) throws JsonProcessingException {
         return this.manageDetailService.generateXml();
+    }
+
+    @PostMapping(value = "/sendQueue")
+    public Response sendQueue(
+    ){
+        return this.manageDetailService.sendMessageToQueue();
     }
 
 }
