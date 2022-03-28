@@ -1,0 +1,28 @@
+{
+  "mangeRegisterRequest" : {
+    "manageTaxId" : "001"
+  },
+  "mangePeopleDetail" : [{
+    "managePeopleTaxId": "001",
+    "refNo": "PE00063",
+    "managePeopleName": "sorayut",
+    "managePeopleLastName": "pongpun",
+    "address": "22/11",
+    "building": null,
+    "roomNo": null,
+    "floor": null,
+    "village": "หมู่บ้าน สินทวีกรีนวิลล์3",
+    "moo": "1",
+    "soi": "4",
+    "road": null,
+    "districtId": 0,
+    "subProvinceId": 0,
+    "proviceId": 0,
+    "postCode": "10100",
+    "email": "sorayut@gmail.com",
+    "newEmail": null,
+    "tel": "09x-xxx-xxxx",
+    "telext": null,
+    "updateDateTime": null
+  }]
+}

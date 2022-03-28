@@ -24,18 +24,12 @@ import java.util.List;
 @Service
 public class ManagePeopleImplement implements ManagePeopleService {
     private static final Logger logger = Logger.getLogger(ManagePeopleImplement.class);
-    private final ManagePeopleDetailRepository managePeopleDetailRepository;
-    private final ManagePeopleVatRepository managePeopleVatRepository;
-    private final ManageMasterDistrictRepository manageMasterDistrictRepository;
-
     @Autowired
-    public ManagePeopleImplement(ManagePeopleDetailRepository managePeopleDetailRepository,
-            ManagePeopleVatRepository managePeopleVatRepository,
-            ManageMasterDistrictRepository manageMasterDistrictRepository) {
-        this.managePeopleDetailRepository = managePeopleDetailRepository;
-        this.managePeopleVatRepository = managePeopleVatRepository;
-        this.manageMasterDistrictRepository = manageMasterDistrictRepository;
-    }
+    private  ManagePeopleDetailRepository managePeopleDetailRepository;
+    @Autowired
+    private  ManagePeopleVatRepository managePeopleVatRepository;
+    @Autowired
+    private  ManageMasterDistrictRepository manageMasterDistrictRepository;
 
     @Override
     public ManagePeopleViewResponse getDate(MangeRegisterRequest mangeRegisterRequest) {
