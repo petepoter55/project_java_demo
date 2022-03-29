@@ -57,6 +57,8 @@ public class ManagePeopleImplementTest {
                assertEquals(expected.getManagePeopleDetailResponse().get(0).getFirstName(), actual.getManagePeopleDetailResponse().get(0).getFirstName());
                assertEquals(expected.getManagePeopleDetailResponse().get(0).getLastName(), actual.getManagePeopleDetailResponse().get(0).getLastName());
                assertEquals(expected.getManagePeopleDetailResponse().get(0).getVillage(), actual.getManagePeopleDetailResponse().get(0).getVillage());
+               assertEquals(expected.getManagePeopleDetailResponse().get(0).getDistrictId(), actual.getManagePeopleDetailResponse().get(0).getDistrictId());
+               assertEquals(expected.getManagePeopleDetailResponse().get(0).getEmail(), actual.getManagePeopleDetailResponse().get(0).getEmail());
            }catch (ResponseException e){
               e.printStackTrace();
            }
@@ -73,8 +75,8 @@ public class ManagePeopleImplementTest {
         for(MangePeopleDetail data : manageRegisterRequestTest.getMangePeopleDetail()) {
             manageRegisterRequestTestArrayList.add(data);
         }
-        // ตาม step ใน method ว่ามีการใช้ Repository อะไรบ้างและต้องเตรียมข้อมูลใน File.JSON ด้วย
-        when(this.managePeopleDetailRepository.searchByManagePeopleTaxIdLike(manageRegisterRequestTest.getMangeRegisterRequest().getManageTaxId())).thenReturn(manageRegisterRequestTestArrayList);
+        // ตาม step ใน method ว่ามีการใช้ Repository อะไรบ้างและต้องเตรียมข้อมูลใน File.JSON ด้วยตาม CASE
+        when(this.managePeopleDetailRepository.searchByManagePeopleTaxIdLike(any())).thenReturn(manageRegisterRequestTestArrayList);
     }
 
 }

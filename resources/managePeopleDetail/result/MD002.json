@@ -1,0 +1,29 @@
+{
+  "status": false,
+  "message": "ไม่พบข้อมูล",
+  "data": [
+    {
+      "manageTaxId": null,
+      "refNo": null,
+      "firstName": null,
+      "lastName": null,
+      "address": null,
+      "building": null,
+      "roomNo": null,
+      "floor": null,
+      "village": null,
+      "moo": null,
+      "soi": null,
+      "road": null,
+      "districtId": null,
+      "subProvinceId": null,
+      "proviceId": null,
+      "postCode": null,
+      "email": null,
+      "newEmail": null,
+      "tel": null,
+      "telext": null,
+      "updateDateTime": null
+    }
+  ]
+}

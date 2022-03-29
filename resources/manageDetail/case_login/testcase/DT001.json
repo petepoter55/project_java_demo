@@ -1,0 +1,29 @@
+{
+  "loginRequest" : {
+    "username" : "US001",
+    "password" : "Register@123"
+  },
+  "manageUser" : {
+    "uid" : 7,
+    "ucode" : "7GiC&ssgkz",
+    "username" : "US001",
+    "password" : "5418d6bd30e4cd60b7957221e1b950e8aaf3b8bb5d3a48cf55c887314478573e",
+    "firstName" : "sorayut",
+    "lastName" : "pongpun",
+    "postCode" : "10100",
+    "telNo" : null,
+    "email" : "sorayut@gmail.com",
+    "approved" : "Y",
+    "approvedDate" : "2022-02-09 00:00:00",
+    "statusLogin" : "Y",
+    "lastLogin" : null,
+    "passwordDate" : "2022-02-09 00:00:00",
+    "createBy" : 0,
+    "passwordDate" : null,
+    "TRYTOACCESS" : 0,
+    "lastAccess" : null,
+    "forceChangePassword" : 1,
+    "token_user" : "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVTMDAxIiwidHlwZSI6IjU0MThkNmJkMzBlNGNkNjBiNzk1NzIyMWUxYjk1MGU4YWFmM2I4YmI1ZDNhNDhjZjU1Yzg4NzMxNDQ3ODU3M2UiLCJtYW5hZ2VQZW9wbGVUYXhJZCI6IjAwMSIsImlhdCI6MTY0NDQxNjc5M30.OusgFcJnnD3f8FaGGnmja4E6vMReQVMI-SXdz8cTqXE"
+  },
+  "checkpass" : true
+}
