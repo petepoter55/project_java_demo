@@ -9,10 +9,7 @@ import com.example.projectTestDemo.dtoResponse.JwtResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.dtoResponse.ValidateXmlResponse;
 import com.example.projectTestDemo.entity.ManageUser;
-import com.example.projectTestDemo.service.ManageDetailService;
-import com.example.projectTestDemo.service.ManageFileXmlService;
-import com.example.projectTestDemo.service.ManagePeopleService;
-import com.example.projectTestDemo.service.ManageZipService;
+import com.example.projectTestDemo.service.*;
 import com.example.projectTestDemo.service.implement.ManageZipImplement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -33,6 +30,8 @@ public class UsermanageMentController {
     ManagePeopleService managePeopleService;
     @Autowired
     ManageFileXmlService manageFileXmlService;
+    @Autowired
+    JwtService jwtService;
     @Autowired
     ManageZipService manageZipService;
     @Autowired
@@ -56,8 +55,17 @@ public class UsermanageMentController {
     public JwtResponse getTokenData(
             @RequestBody LoginRequest loginRequest
     ){
-        return this.manageDetailService.getDataToken(loginRequest);
+        return this.jwtService.getDataToken(loginRequest);
     }
+    @PostMapping(value = "/generate-token")
+    public Response generateToken(
+            @RequestParam("username") String username,
+            @RequestParam("managePeopleTaxId") String managePeopleTaxId,
+            @RequestParam("beforeToken") String beforeToken
+    ) {
+        return this.jwtService.generateToken(username,managePeopleTaxId,beforeToken);
+    }
+
 
     @GetMapping(value = "/export-excel" ,consumes = { MediaType.APPLICATION_JSON_VALUE })
     public void exportExcel(

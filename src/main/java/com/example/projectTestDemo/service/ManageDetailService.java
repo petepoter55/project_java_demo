@@ -25,11 +25,10 @@ public interface ManageDetailService {
 
     public Response login(LoginRequest loginRequest);
 
-    public JwtResponse getDataToken(LoginRequest loginRequest);
-
     public void exportExcel(ExportExcelRequest exportExcelRequest, HttpServletResponse response);
 
     public ImportExcelManageUserResponse importExcel(MultipartFile file) throws IOException;
 
     public Response sendMessageToQueue();
+
 }

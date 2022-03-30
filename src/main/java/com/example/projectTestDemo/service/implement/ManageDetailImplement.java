@@ -53,14 +53,16 @@ public class ManageDetailImplement implements ManageDetailService {
     private static final Logger logger = Logger.getLogger(ManageDetailImplement.class);
     private final ManagePeopleDetailRepository managePeopleDetailRepository;
     private final UserRepository userRepository;
+    private final JwtImplement jwtImplement;
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
     public ManageDetailImplement(ManagePeopleDetailRepository managePeopleDetailRepository,
-            UserRepository userRepository,RabbitTemplate rabbitTemplate) {
+            UserRepository userRepository,RabbitTemplate rabbitTemplate,JwtImplement jwtImplement) {
         this.managePeopleDetailRepository = managePeopleDetailRepository;
         this.userRepository = userRepository;
         this.rabbitTemplate = rabbitTemplate;
+        this.jwtImplement = jwtImplement;
     }
 
     @Value("${jwt.secretkey}")
@@ -109,7 +111,7 @@ public class ManageDetailImplement implements ManageDetailService {
                     user.setPostCode(mangePeopleDetail.getPostCode());
                     user.setCreateBy(BigInteger.valueOf(0));
                     user.setForceChangePassword(1);
-                    user.setToken_user(generate(username, mangePeopleDetail.getEmail(), mangePeopleDetail.getManagePeopleTaxId()));
+                    user.setToken_user(jwtImplement.generate(username, mangePeopleDetail.getEmail(), mangePeopleDetail.getManagePeopleTaxId()));
                     this.userRepository.save(user);
                 } else {
                     return new Response(false, "รหัสผ่านระบุไม่ถูกต้อง เนื่องจาก ระบุรหัสผ่านไม่ตรงกับยืนยันรหัสผ่าน",
@@ -128,7 +130,7 @@ public class ManageDetailImplement implements ManageDetailService {
 
     @Override
     public String gen() {
-        return generate("test", "2", "001");
+        return jwtImplement.generate("test", "2", "001");
     }
 
     @Override
@@ -158,21 +160,6 @@ public class ManageDetailImplement implements ManageDetailService {
         }
         logger.info("===== End Login =======");
         return new Response(true, "เข้าสู่ระบบสำเร็จ", "200");
-    }
-
-    @Override
-    public JwtResponse getDataToken(LoginRequest loginRequest) {
-        ManageUser manageUser = this.userRepository.findByUsername(loginRequest.getUsername());
-        JwtResponse jwtResponse = new JwtResponse();
-        try {
-            boolean checkUser = ObjectUtils.isEmpty(manageUser);
-            if (!checkUser) {
-                jwtResponse = this.getDataJwt(manageUser.getToken_user());
-            }
-        } catch (ResponseException e) {
-            e.printStackTrace();
-        }
-        return jwtResponse;
     }
 
     @Override
@@ -210,34 +197,6 @@ public class ManageDetailImplement implements ManageDetailService {
             return new Response(false, "ส่งไม่สำเร็จ", "500");
         }
         return new Response(true, "ส่งสำเร็จ", "200");
-    }
-
-    public String generate(String username, String email, String managePeopleTaxId) {
-        Calendar currentDate = Calendar.getInstance();
-        Date date = currentDate.getTime();
-
-        SecretKey key = Keys.hmacShaKeyFor(this.jwtSecretkey.getBytes(StandardCharsets.UTF_8));
-        return Jwts.builder()
-                .claim("username", username)
-                .claim("email", email)
-                .claim("managePeopleTaxId", managePeopleTaxId)
-                .setIssuedAt(date)
-                .signWith(key, SignatureAlgorithm.HS256).compact();
-    }
-
-    public JwtResponse getDataJwt(String jwtToken) {
-        JwtResponse jwtResponse = new JwtResponse();
-        try {
-            SecretKey key = Keys.hmacShaKeyFor(this.jwtSecretkey.getBytes(StandardCharsets.UTF_8));
-            Jws<Claims> jws = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwtToken);
-            jwtResponse.setUsername(jws.getBody().get("username").toString());
-            jwtResponse.setEmail(jws.getBody().get("email").toString());
-            jwtResponse.setManagePeopleTaxId(jws.getBody().get("managePeopleTaxId").toString());
-            jwtResponse.setIssueDate(jws.getBody().getIssuedAt());
-        } catch (ResponseException e) {
-            e.printStackTrace();
-        }
-        return jwtResponse;
     }
 
     public void exportSearchUserByApproved(HttpServletResponse response, ExportExcelRequest dto) throws IOException {

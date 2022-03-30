@@ -35,7 +35,9 @@ public class WebConfigurerAdapter implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         List<String> excludePathPatterns = new ArrayList<String>();
         excludePathPatterns.add("/api/createRegister");
-//        registry.addInterceptor(this.authenticationInterceptor).addPathPatterns("/api/createRegister");
+        excludePathPatterns.add("/api/getData");
+        excludePathPatterns.add("/manage/get-token");
+        excludePathPatterns.add("/manage/generate-token");
         registry.addInterceptor(this.authenticationInterceptor).addPathPatterns("/**/**").excludePathPatterns(excludePathPatterns);
     }
 }
