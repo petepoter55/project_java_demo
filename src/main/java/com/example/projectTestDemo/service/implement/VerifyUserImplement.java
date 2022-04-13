@@ -34,6 +34,7 @@ public class VerifyUserImplement implements VerifyUserService {
                 throw new ResponseException("404", "Token Not Found");
             }
         } catch (ResponseException e) {
+            logger.error("error : "+ e.getMessage());
             throw new ResponseException(e.getExceptionCode(),e.getMessage());
         }
         logger.info("===== done verify interceptor =======");

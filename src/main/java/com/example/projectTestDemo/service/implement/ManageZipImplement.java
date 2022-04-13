@@ -72,7 +72,7 @@ public class ManageZipImplement implements ManageZipService {
                 this.manageUploadTrackingRepository.save(manageUploadTracking);
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
             return new Response(false, e.getMessage(), "500");
         }
         logger.info("============================= Done Upload ZIP ==============================");
@@ -94,7 +94,7 @@ public class ManageZipImplement implements ManageZipService {
                 }
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
         }
         logger.info("============================= Done UNZIP ==============================");
     }
@@ -116,7 +116,7 @@ public class ManageZipImplement implements ManageZipService {
         try {
             fos.write(file);
         }catch (IOException ex){
-            ex.printStackTrace();
+            logger.error("error : "+ ex.getMessage());
         }finally {
             if (fos != null) {
                 fos.close();
@@ -161,7 +161,7 @@ public class ManageZipImplement implements ManageZipService {
             zis.close();
 
         }catch (Exception ex){
-            ex.printStackTrace();
+            logger.error("error : "+ ex.getMessage());
             statusUnzip = false;
         }
 
@@ -189,7 +189,7 @@ public class ManageZipImplement implements ManageZipService {
                fileName.add(d.getName());
            }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
         }finally {
 
         }

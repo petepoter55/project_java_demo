@@ -77,6 +77,13 @@ public class UtilityTools {
         return dateFormat.format(d);
     }
 
+    public String generateDatetimeAndMilliDate(Date date) throws ParseException {
+        String fomatDate = "yyyy-MM-dd HH:mm:ss.SSS";
+        DateFormat dateFormat = new SimpleDateFormat(fomatDate);
+
+        return dateFormat.format(date);
+    }
+
     public Date date2DatetimeDbFormatsDateMilli(String date) throws ParseException {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar cal = Calendar.getInstance();

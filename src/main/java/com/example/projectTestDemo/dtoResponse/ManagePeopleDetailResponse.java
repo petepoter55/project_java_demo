@@ -1,9 +1,10 @@
 package com.example.projectTestDemo.dtoResponse;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.util.Date;
 
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ManagePeopleDetailResponse {
     private String manageTaxId;
     private String refNo;
@@ -25,8 +26,8 @@ public class ManagePeopleDetailResponse {
     private String newEmail;
     private String tel;
     private String telext;
-    private Date createDateTime;
-    private Date updateDateTime;
+    private String createDateTime;
+    private String updateDateTime;
 
     public String getManageTaxId() {
         return manageTaxId;
@@ -188,19 +189,19 @@ public class ManagePeopleDetailResponse {
         this.telext = telext;
     }
 
-    public Date getCreateDateTime() {
+    public String getCreateDateTime() {
         return createDateTime;
     }
 
-    public void setCreateDateTime(Date createDateTime) {
+    public void setCreateDateTime(String createDateTime) {
         this.createDateTime = createDateTime;
     }
 
-    public Date getUpdateDateTime() {
+    public String getUpdateDateTime() {
         return updateDateTime;
     }
 
-    public void setUpdateDateTime(Date updateDateTime) {
+    public void setUpdateDateTime(String updateDateTime) {
         this.updateDateTime = updateDateTime;
     }
 }

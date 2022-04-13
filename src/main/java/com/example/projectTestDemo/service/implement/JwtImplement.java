@@ -43,7 +43,7 @@ public class JwtImplement implements JwtService {
                 jwtResponse = this.getDataJwt(manageUser.getToken_user());
             }
         } catch (ResponseException e) {
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
         }
         return jwtResponse;
     }
@@ -60,7 +60,7 @@ public class JwtImplement implements JwtService {
                 return new Response(false, "สร้าง token ไม่สำเร็จ", "500");
             }
         }catch (ResponseException e){
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
         }
         return new Response(true, "สร้าง token สำเร็จ", "200");
     }
@@ -88,7 +88,7 @@ public class JwtImplement implements JwtService {
             jwtResponse.setManagePeopleTaxId(jws.getBody().get("managePeopleTaxId").toString());
             jwtResponse.setIssueDate(jws.getBody().getIssuedAt());
         } catch (ResponseException e) {
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
         }
         return jwtResponse;
     }

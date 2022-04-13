@@ -46,7 +46,7 @@ public class ManageFileXmLlmplement implements ManageFileXmlService {
                 throw new Exception();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
         }
 
         return message;
@@ -78,7 +78,7 @@ public class ManageFileXmLlmplement implements ManageFileXmlService {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
             return new ValidateXmlResponse(false, "validate xml fails", "500", result);
         } finally {
             if (inputStreamXmlSignXpath != null) {
