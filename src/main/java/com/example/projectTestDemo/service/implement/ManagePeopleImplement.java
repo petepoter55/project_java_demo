@@ -13,6 +13,10 @@ import com.example.projectTestDemo.repository.ManagePeopleDetailRepository;
 import com.example.projectTestDemo.repository.ManagePeopleVatRepository;
 import com.example.projectTestDemo.service.ManagePeopleService;
 import com.example.projectTestDemo.tools.UtilityTools;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +42,7 @@ public class ManagePeopleImplement implements ManagePeopleService {
         List<ManagePeopleDetailResponse> managePeopleDetailResponseList = new ArrayList<>();
         ManagePeopleDetailResponse managePeopleDetailResponse = new ManagePeopleDetailResponse();
         ManagePeopleViewResponse managePeopleViewResponse = new ManagePeopleViewResponse();
+
         boolean status = true;
         String message = "";
 
@@ -46,6 +51,8 @@ public class ManagePeopleImplement implements ManagePeopleService {
             if (mangePeopleDetailList.size() > 0) {
                 for (MangePeopleDetail data : mangePeopleDetailList) {
                     managePeopleDetailResponse = this.setObjectDetailView(data);
+                    Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+                    logger.info("data => " + gson.toJson(managePeopleDetailResponse));
                     managePeopleDetailResponseList.add(managePeopleDetailResponse);
                 }
                 message = "ดึงข้อมูลสำเร็จ";
@@ -57,8 +64,8 @@ public class ManagePeopleImplement implements ManagePeopleService {
             managePeopleViewResponse.setMessage(message);
             managePeopleViewResponse.setManagePeopleDetailResponse(managePeopleDetailResponseList);
 
-        } catch (ResponseException e) {
-            e.printStackTrace();
+        } catch (ResponseException | ParseException e) {
+            logger.error("error : "+ e.getMessage());
             managePeopleViewResponse.setStatus(false);
             managePeopleViewResponse.setMessage(e.getMessage());
             managePeopleViewResponse.setManagePeopleDetailResponse(null);
@@ -75,7 +82,7 @@ public class ManagePeopleImplement implements ManagePeopleService {
             this.managePeopleDetailRepository.deleteById(id);
 
         } catch (ResponseException e) {
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
             return new Response(false, e.getMessage(), "500");
         }
         return new Response(true, "ลบข้อมูลสำเร็จ", "200");
@@ -95,7 +102,7 @@ public class ManagePeopleImplement implements ManagePeopleService {
             }
 
         } catch (ResponseException | ParseException e) {
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
             return new Response(false, e.getMessage(), "500");
         }
         return new Response(true, "ลงทะเบียนเรียบร้อบ", "200");
@@ -113,9 +120,8 @@ public class ManagePeopleImplement implements ManagePeopleService {
             }
 
         } catch (ResponseException | ParseException e) {
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
         }
-
         this.managePeopleDetailRepository.save(mangePeopleDetail);
 
         return new Response(true, "อัปเดตข้อมูลเสร็จเรียบร้อย", "200");
@@ -154,7 +160,7 @@ public class ManagePeopleImplement implements ManagePeopleService {
         return mangePeopleDetail;
     }
 
-    public ManagePeopleDetailResponse setObjectDetailView(MangePeopleDetail mangePeopleDetail) {
+    public ManagePeopleDetailResponse setObjectDetailView(MangePeopleDetail mangePeopleDetail) throws ParseException {
         ManagePeopleDetailResponse managePeopleDetailResponse = new ManagePeopleDetailResponse();
 
         managePeopleDetailResponse.setManageTaxId(mangePeopleDetail.getManagePeopleTaxId());
@@ -170,7 +176,7 @@ public class ManagePeopleImplement implements ManagePeopleService {
         managePeopleDetailResponse.setVillage(mangePeopleDetail.getVillage());
         managePeopleDetailResponse.setSoi(mangePeopleDetail.getSoi());
         managePeopleDetailResponse.setTel(mangePeopleDetail.getTel());
-        managePeopleDetailResponse.setCreateDateTime(mangePeopleDetail.getCreateDateTime());
+        managePeopleDetailResponse.setCreateDateTime(new UtilityTools().generateDatetimeAndMilliDate(mangePeopleDetail.getCreateDateTime()));
         return managePeopleDetailResponse;
     }
 

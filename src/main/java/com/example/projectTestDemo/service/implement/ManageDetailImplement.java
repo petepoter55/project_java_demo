@@ -121,7 +121,7 @@ public class ManageDetailImplement implements ManageDetailService {
                 return new Response(false, "สร้างบัญชีผู้ใช้งานไม่สำเร็จ", "500");
             }
         } catch (ResponseException | NoSuchAlgorithmException | UnsupportedEncodingException | ParseException e) {
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
             return new Response(false, "สร้างบัญชีผู้ใช้งานไม่สำเร็จ", "500");
         }
         logger.info("===== End CreateAccount =======");
@@ -155,7 +155,7 @@ public class ManageDetailImplement implements ManageDetailService {
             }
 
         } catch (ResponseException | NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
             return new Response(false, "เข้าสู่ระบบไม่สำเร็จ", "500");
         }
         logger.info("===== End Login =======");
@@ -167,7 +167,7 @@ public class ManageDetailImplement implements ManageDetailService {
         try {
             this.exportSearchUserByApproved(response, exportExcelRequest);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
         }
     }
 
@@ -193,7 +193,7 @@ public class ManageDetailImplement implements ManageDetailService {
                 push.requestUpdateManage(mangePeopleDetail);
             }
         }catch (ResponseException e){
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
             return new Response(false, "ส่งไม่สำเร็จ", "500");
         }
         return new Response(true, "ส่งสำเร็จ", "200");
@@ -258,7 +258,7 @@ public class ManageDetailImplement implements ManageDetailService {
             workbook.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
         } finally {
             if (outStream != null) {
                 outStream.close();
@@ -285,7 +285,7 @@ public class ManageDetailImplement implements ManageDetailService {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error : "+ e.getMessage());
         } finally {
             workbook.close();
         }
