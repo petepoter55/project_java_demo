@@ -1,0 +1,6 @@
+{
+    "username":"$username",
+    "firstname":"$firstName",
+    "lastname":"$lastName",
+    "email":"$email",
+}

@@ -1,5 +1,7 @@
 package com.example.projectTestDemo.service.validation.custom;
 
+import com.example.projectTestDemo.dtoResponse.ValidateSchemaResponse;
+import com.example.projectTestDemo.environment.Constant;
 import com.example.projectTestDemo.exception.ResponseException;
 import com.example.projectTestDemo.model.RequestKeeper;
 import com.example.projectTestDemo.service.validation.ValidationAbstract;
@@ -31,7 +33,7 @@ public class ValidatorSchema extends ValidationAbstract {
     }
 
     @Override
-    public void validate(String requestName, String jsonRequest) throws ResponseException {
+    public ValidateSchemaResponse validate(String requestName, String jsonRequest) throws ResponseException {
         String pathSchemaRequest = "template/" +requestName +"/validation.json";
         logger.info("serviceNameSchema :" + pathSchemaRequest);
          try {
@@ -44,7 +46,9 @@ public class ValidatorSchema extends ValidationAbstract {
              schema.validate(jsonSubject);
          }catch (ValidationException | JSONException e){
              logger.error("error : " + e.getMessage());
+             return new ValidateSchemaResponse(false,e.getMessage());
          }
+        return new ValidateSchemaResponse(true, Constant.SUCCESS);
     }
 
     private String cleanUpUnwantedSpaces(String jsonString) {

@@ -5,6 +5,7 @@ import com.example.projectTestDemo.dtoRequest.ExportExcelRequest;
 import com.example.projectTestDemo.dtoRequest.LoginRequest;
 import com.example.projectTestDemo.dtoResponse.ImportExcelManageUserResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
+import com.example.projectTestDemo.dtoResponse.ValidateSchemaResponse;
 import com.example.projectTestDemo.entity.MangePeopleDetail;
 import com.example.projectTestDemo.entity.ManageUser;
 import com.example.projectTestDemo.environment.Constant;
@@ -12,10 +13,14 @@ import com.example.projectTestDemo.exception.ResponseException;
 import com.example.projectTestDemo.queue.Push;
 import com.example.projectTestDemo.repository.ManagePeopleDetailRepository;
 import com.example.projectTestDemo.repository.UserRepository;
+import com.example.projectTestDemo.response.custom.ResponseMapper;
 import com.example.projectTestDemo.service.ManageDetailService;
 import com.example.projectTestDemo.service.validation.custom.ValidatorSchema;
 import com.example.projectTestDemo.tools.UtilityTools;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import org.apache.log4j.Logger;
@@ -48,15 +53,17 @@ public class ManageDetailImplement implements ManageDetailService {
     private final JwtImplement jwtImplement;
     private RabbitTemplate rabbitTemplate;
     private ValidatorSchema validatorSchema;
+    private ResponseMapper responseMapper;
 
     @Autowired
     public ManageDetailImplement(ManagePeopleDetailRepository managePeopleDetailRepository,
-            UserRepository userRepository,RabbitTemplate rabbitTemplate,JwtImplement jwtImplement,ValidatorSchema validatorSchema) {
+            UserRepository userRepository,RabbitTemplate rabbitTemplate,JwtImplement jwtImplement,ValidatorSchema validatorSchema,ResponseMapper responseMapper) {
         this.managePeopleDetailRepository = managePeopleDetailRepository;
         this.userRepository = userRepository;
         this.rabbitTemplate = rabbitTemplate;
         this.jwtImplement = jwtImplement;
         this.validatorSchema = validatorSchema;
+        this.responseMapper = responseMapper;
     }
 
     @Value("${jwt.secretkey}")
@@ -197,13 +204,39 @@ public class ManageDetailImplement implements ManageDetailService {
 
     @Override
     public Response testValidationLoginRequest(String jsonRequest) {
+        UtilityTools utilityTools = new UtilityTools();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        ValidateSchemaResponse validateSchemaResponse = validatorSchema.validate(Constant.REQUEST_LOGIN, jsonRequest);
         try {
-            validatorSchema.validate(Constant.REQUEST_LOGIN, jsonRequest);
-        }catch (ResponseException e){
+            if(validateSchemaResponse.isStatus()){
+                LoginRequest loginRequest = objectMapper.readValue(jsonRequest,LoginRequest.class);
+                ManageUser manageUser = this.userRepository.findByUsername(loginRequest.getUsername());
+                //map response to file response.vm
+                String jsonResponse = responseMapper.mapSpResponseToJson(Constant.REQUEST_LOGIN, objectMapper.writeValueAsString(manageUser));
+                Gson gson = new GsonBuilder().serializeNulls().create();
+                logger.info("jsonResponse" + gson.toJson(jsonResponse));
+
+                Boolean checkPass = true;
+                Boolean checkObject = ObjectUtils.isEmpty(manageUser);
+                logger.info("checkObject : " + checkObject);
+                if (!checkObject) {
+                    checkPass = utilityTools.checkPassphrases(manageUser.getPassword(),
+                            loginRequest.getPassword());
+                    logger.info("checkpass : " + checkPass);
+                    if (!checkPass) {
+                        return new Response(false, "บัญชีผู้ใช้งานหรือ รหัสผ่านไม่ถูกต้องโปรดตรวจสอบ", "500");
+                    }
+                } else {
+                    return new Response(false, "บัญชีผู้ใช้งานไม่มีในระบบ", "500");
+                }
+            }else {
+                return new Response(false, validateSchemaResponse.getMessage(), "500");
+            }
+        }catch (ResponseException | JsonProcessingException | UnsupportedEncodingException | NoSuchAlgorithmException e){
             logger.error("error : " + e.getMessage());
-            return new Response(false, e.getMessage(), "500");
         }
-        return new Response(true, "test validation done", "200");
+        return new Response(true, "เข้าสู่ระบบสำเร็จ", "200");
     }
 
     public void exportSearchUserByApproved(HttpServletResponse response, ExportExcelRequest dto) throws IOException {
