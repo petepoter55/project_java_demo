@@ -156,6 +156,13 @@
 			<version>2.9.0</version>
 			<scope>compile</scope>
 		</dependency>
+
+<!--		jsonObject-->
+		<dependency>
+			<groupId>org.everit.json</groupId>
+			<artifactId>org.everit.json.schema</artifactId>
+			<version>1.5.1</version>
+		</dependency>
 	</dependencies>
 
 
