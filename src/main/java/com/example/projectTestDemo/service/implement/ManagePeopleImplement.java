@@ -176,7 +176,6 @@ public class ManagePeopleImplement implements ManagePeopleService {
         managePeopleDetailResponse.setVillage(mangePeopleDetail.getVillage());
         managePeopleDetailResponse.setSoi(mangePeopleDetail.getSoi());
         managePeopleDetailResponse.setTel(mangePeopleDetail.getTel());
-        managePeopleDetailResponse.setCreateDateTime(new UtilityTools().generateDatetimeAndMilliDate(mangePeopleDetail.getCreateDateTime()));
         return managePeopleDetailResponse;
     }
 
