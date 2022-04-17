@@ -41,7 +41,7 @@ public class ManageFileXmLlmplement implements ManageFileXmlService {
                 // .collect(Collectors.joining("\n"));
 
                 // solution 2
-                message = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+//                message = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
             } else {
                 throw new Exception();
             }

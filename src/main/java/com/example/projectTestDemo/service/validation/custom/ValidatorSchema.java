@@ -33,18 +33,21 @@ public class ValidatorSchema extends ValidationAbstract {
     }
 
     @Override
-    public ValidateSchemaResponse validate(String requestName, String jsonRequest) throws ResponseException {
+    public ValidateSchemaResponse validate(String requestName, String jsonRequest){
         String pathSchemaRequest = "template/" +requestName +"/validation.json";
         logger.info("serviceNameSchema :" + pathSchemaRequest);
          try {
              String schemaString = getSchemaConfigFactory(requestName, pathSchemaRequest);
-
+             logger.info("schemaString :" + schemaString);
              JSONObject jsonSchema = new JSONObject(cleanUpUnwantedSpaces(schemaString));
              JSONObject jsonSubject = new JSONObject(cleanUpUnwantedSpaces(jsonRequest));
 
              Schema schema = SchemaLoader.load(jsonSchema);
              schema.validate(jsonSubject);
-         }catch (ValidationException | JSONException e){
+         }catch (ValidationException ex){
+             logger.error("error : " + ex.getMessage());
+             return new ValidateSchemaResponse(false,ex.getMessage());
+         }catch (JSONException e){
              logger.error("error : " + e.getMessage());
              return new ValidateSchemaResponse(false,e.getMessage());
          }

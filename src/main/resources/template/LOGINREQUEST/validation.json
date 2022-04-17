@@ -5,12 +5,12 @@
     "username": {
       "type": "string",
       "minLength": 1 ,
-      "maxLength": 15
+      "maxLength": 12
     }
   ,"password": {
       "type": "string",
       "minLength": 1 ,
-      "maxLength": 15
+      "maxLength": 12
     }
   },
   "required": [

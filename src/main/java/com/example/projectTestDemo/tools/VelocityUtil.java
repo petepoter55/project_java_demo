@@ -27,6 +27,7 @@ public class VelocityUtil {
     public String fillDataToTemplateFactory(String serviceName, String templateName, Map<String, Object> data) throws ResponseException {
 
         logger.info("serviceName: "+serviceName+ " ,templateName: " + templateName);
+        logger.info("data : "+data.toString());
         return fillDataToTemplate(serviceName, templateName, data);
     }
 

@@ -32,7 +32,7 @@ public class RequestKeeper {
 
     public String getTemplate(String requestName, String pathSchemaRequest) throws ResponseException {
         if (!requests.containsKey(pathSchemaRequest)) {
-            logger.info("Template name: {} for service: {} not found, reading a new template" + requestName + pathSchemaRequest);
+            logger.info("Template name: {} for service: {} not found, reading a new template : " + requestName +" : "+ pathSchemaRequest);
             try{
                 InputStream template = new ClassPathResource(pathSchemaRequest).getInputStream();
                 String templateString = new String(FileCopyUtils.copyToByteArray(template), StandardCharsets.UTF_8);
