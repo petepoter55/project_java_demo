@@ -72,33 +72,17 @@ public class LOGINRequestTest {
 
     @Test
     public void validateLOGINRequestTest() throws Exception {
-        // ARRANGE
+        // ARRANGE -> เตรียมค่า
         LoginRequest loginRequest = new LoginRequest();
         BeanUtils.copyProperties(loginRequest, this);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Type gsonType = new TypeToken<LoginRequest>(){}.getType();
-        logger.info(gson.toJson(loginRequest, gsonType));
-        // ACT
+        // ACT -> เริ่มส่งข้อมูลไปที่ method ที่จะทดสอบ
         String jsonRequest = gson.toJson(loginRequest, gsonType);
         logger.info(jsonRequest);
 //        ValidateSchemaResponse raisedException = validatorSchema.validate(Constant.REQUEST_LOGIN, jsonRequest);
-//        logger.info("raisedException: " + validatorSchema.validate(Constant.REQUEST_LOGIN, jsonRequest));
-        // ASSERT
-//        if (!Constant.CASE_SUCCESS.equalsIgnoreCase(this.caseName) && !this.expected.contains(Constant.NULL_ALLOWED)
-//                && !this.expected.contains(Constant.NO_EXCEPTION_FOUND)) {
-//            final Throwable raisedException = catchThrowable(() ->
-//                    validatorSchema.validate(Constant.REQUEST_LOGIN, jsonRequest));
-//            assertNotNull(Constant.RAISED_EXCEPTION_IS_NULL, raisedException);
-//            System.out.printf("raisedException :" + raisedException);
-//            assertThat(raisedException).isInstanceOf(ResponseException.class);
-
-//            if (raisedException instanceof ResponseException) {
-//                InputValidationException ive = (InputValidationException) raisedException;
-//                log.info(String.format(EXPECTED_RESULT, expected));
-//                log.info(String.format(ACTUAL_RESULT, ive.getErrors().getErrors().get(0).getMessage()));
-//                assertEquals(expected, ive.getErrors().getErrors().get(0).getMessage());
-//            }
-//        }
+//        logger.info("raisedException: " + raisedException);
+        // ASSERT -> ผลลัพธ์ที่คาดหวัง
     }
 
     public String getCaseName() {

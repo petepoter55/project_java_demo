@@ -1,7 +1,6 @@
 package com.example.projectTestDemo.environment;
 
 public class Constant {
-    //
     public final static String TEMPLATE_PATH = "src/main/resources/template/";
     public final static String VALIDATION_FILE = "/validation.json";
 

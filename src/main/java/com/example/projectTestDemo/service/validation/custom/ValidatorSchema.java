@@ -41,6 +41,8 @@ public class ValidatorSchema extends ValidationAbstract {
              logger.info("schemaString :" + schemaString);
              JSONObject jsonSchema = new JSONObject(cleanUpUnwantedSpaces(schemaString));
              JSONObject jsonSubject = new JSONObject(cleanUpUnwantedSpaces(jsonRequest));
+             logger.info("jsonSchema :" + jsonSchema);
+             logger.info("jsonSubject :" + jsonSubject);
 
              Schema schema = SchemaLoader.load(jsonSchema);
              schema.validate(jsonSubject);

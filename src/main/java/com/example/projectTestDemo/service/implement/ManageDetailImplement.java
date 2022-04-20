@@ -15,6 +15,8 @@ import com.example.projectTestDemo.repository.ManagePeopleDetailRepository;
 import com.example.projectTestDemo.repository.UserRepository;
 import com.example.projectTestDemo.response.custom.ResponseMapper;
 import com.example.projectTestDemo.service.ManageDetailService;
+import com.example.projectTestDemo.service.validation.ValidationAbstract;
+import com.example.projectTestDemo.service.validation.ValidatorFactory;
 import com.example.projectTestDemo.service.validation.custom.ValidatorSchema;
 import com.example.projectTestDemo.tools.UtilityTools;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -54,16 +56,18 @@ public class ManageDetailImplement implements ManageDetailService {
     private RabbitTemplate rabbitTemplate;
     private ValidatorSchema validatorSchema;
     private ResponseMapper responseMapper;
+    private ValidatorFactory validatorFactory;
 
     @Autowired
     public ManageDetailImplement(ManagePeopleDetailRepository managePeopleDetailRepository,
-            UserRepository userRepository,RabbitTemplate rabbitTemplate,JwtImplement jwtImplement,ValidatorSchema validatorSchema,ResponseMapper responseMapper) {
+            UserRepository userRepository,RabbitTemplate rabbitTemplate,JwtImplement jwtImplement,ValidatorSchema validatorSchema,ResponseMapper responseMapper,ValidatorFactory validatorFactory) {
         this.managePeopleDetailRepository = managePeopleDetailRepository;
         this.userRepository = userRepository;
         this.rabbitTemplate = rabbitTemplate;
         this.jwtImplement = jwtImplement;
         this.validatorSchema = validatorSchema;
         this.responseMapper = responseMapper;
+        this.validatorFactory = validatorFactory;
     }
 
     @Value("${jwt.secretkey}")
@@ -207,7 +211,9 @@ public class ManageDetailImplement implements ManageDetailService {
         UtilityTools utilityTools = new UtilityTools();
         ObjectMapper objectMapper = new ObjectMapper();
 
-        ValidateSchemaResponse validateSchemaResponse = validatorSchema.validate(Constant.REQUEST_LOGIN, jsonRequest);
+        ValidationAbstract validator = validatorFactory.getValidator(Constant.REQUEST_LOGIN);
+        ValidateSchemaResponse validateSchemaResponse = validator.validate(Constant.REQUEST_LOGIN, jsonRequest);
+
         try {
             if(validateSchemaResponse.isStatus()){
                 LoginRequest loginRequest = objectMapper.readValue(jsonRequest,LoginRequest.class);
