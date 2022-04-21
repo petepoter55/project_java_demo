@@ -24,6 +24,5 @@
     "lastAccess" : null,
     "forceChangePassword" : 1,
     "token_user" : "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlVTMDAxIiwiZW1haWwiOiJzb3JheXV0QGdtYWlsLmNvbSIsIm1hbmFnZVBlb3BsZVRheElkIjoiMDAxIiwiaWF0IjoxNjQ4NjUzNTY0fQ.h1nnomZ-W79hQCauOhAbYicKTzut7kLRNemHWK77bP4"
-  },
-  "checkpass" : true
+  }
 }
