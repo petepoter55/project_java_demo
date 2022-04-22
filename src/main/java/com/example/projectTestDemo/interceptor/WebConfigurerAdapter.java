@@ -38,6 +38,10 @@ public class WebConfigurerAdapter implements WebMvcConfigurer {
         excludePathPatterns.add("/api/getData");
         excludePathPatterns.add("/manage/get-token");
         excludePathPatterns.add("/manage/generate-token");
+        excludePathPatterns.add("/v2/api-docs");
+        excludePathPatterns.add("/swagger-resources/**");
+        excludePathPatterns.add("/swagger-ui.html");
+        excludePathPatterns.add("/webjars/**");
         registry.addInterceptor(this.authenticationInterceptor).addPathPatterns("/**/**").excludePathPatterns(excludePathPatterns);
     }
 }

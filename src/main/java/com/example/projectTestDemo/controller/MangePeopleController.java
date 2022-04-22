@@ -8,11 +8,13 @@ import com.example.projectTestDemo.repository.ManageMasterDistrictRepository;
 import com.example.projectTestDemo.service.ManageDetailService;
 import com.example.projectTestDemo.service.ManagePeopleService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/api")
@@ -25,9 +27,10 @@ public class MangePeopleController {
     @Autowired
     ManageMasterDistrictRepository manageMasterDistrictRepository;
 
-
+    @ApiOperation(value = "get Data ManagePeople", notes = "Inquiry ManagePeople by manageId")
     @GetMapping(value = "/getData",consumes = { MediaType.APPLICATION_JSON_VALUE })
-    public ManagePeopleViewResponse getDatePeople(
+    public  @ResponseBody ManagePeopleViewResponse getDatePeople(
+            @ApiParam(name = "manageId", value = "The manage ID", required = true)
             @RequestBody MangeRegisterRequest mangeRegisterRequest
     ){
         return this.managePeopleService.getDate(mangeRegisterRequest);
