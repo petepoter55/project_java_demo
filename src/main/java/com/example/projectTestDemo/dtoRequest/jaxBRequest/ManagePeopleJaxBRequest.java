@@ -10,13 +10,13 @@ import javax.xml.bind.annotation.*;
 @Getter
 @Setter
 public class ManagePeopleJaxBRequest {
-    @XmlElement(name = "ManageID", required = true)
+    @XmlElement(name = "ManageID", required = true) // use name element ManageID
     private ManagePeopleTaxId managePeopleTaxId;
 
     @Getter
     @Setter
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(propOrder = { "lastName", "firstName"})
+    @XmlType(propOrder = { "lastName", "firstName"}) // order element in tag ManageID
     public static class ManagePeopleTaxId {
         @XmlElement(name = "FirstName", required = true)
         private String firstName;
