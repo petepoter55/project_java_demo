@@ -16,6 +16,10 @@ public class Constant {
     //response
     public final static String SUCCESS = "SUCCESS";
 
+    //date
+    public static final String RQ_DATE_PATTERN = "yyyyMMdd";
+    public static final String RQ_TIME_PATTERN = "hhmmss";
+
     //unit test
     public final static String CASE_SUCCESS = "success_case";
     public final static String NULL_ALLOWED = "Null allowed";
