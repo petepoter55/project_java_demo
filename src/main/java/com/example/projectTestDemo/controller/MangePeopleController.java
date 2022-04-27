@@ -28,12 +28,12 @@ public class MangePeopleController {
     ManageMasterDistrictRepository manageMasterDistrictRepository;
 
     @ApiOperation(value = "get Data ManagePeople", notes = "Inquiry ManagePeople by manageId")
-    @GetMapping(value = "/getData",consumes = { MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(value = "/getData/{manageId}",consumes = { MediaType.APPLICATION_JSON_VALUE })
     public  @ResponseBody ManagePeopleViewResponse getDatePeople(
             @ApiParam(name = "manageId", value = "The manage ID", required = true)
-            @RequestBody MangeRegisterRequest mangeRegisterRequest
+            @PathVariable(value = "manageId") String manageId
     ){
-        return this.managePeopleService.getDate(mangeRegisterRequest);
+        return this.managePeopleService.getDate(manageId);
     }
 
     @GetMapping(value = "/getData1")

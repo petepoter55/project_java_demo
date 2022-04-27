@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ManagePeopleService {
 
-    public ManagePeopleViewResponse getDate(MangeRegisterRequest mangeRegisterRequest);
+    public ManagePeopleViewResponse getDate(String mangeRegisterRequest);
 
     public Response deleteDate(int id);
 

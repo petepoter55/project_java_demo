@@ -49,7 +49,7 @@ public class ManagePeopleImplementTest {
                ManageRegisterRequestTest manageRegisterRequestTest = mapper.readValue(FileUtils.readFileToString(file, StandardCharsets.UTF_8), ManageRegisterRequestTest.class);
                setupManagePeople(manageRegisterRequestTest);
                // ACT
-               ManagePeopleViewResponse actual = managePeopleImplement.getDate(manageRegisterRequestTest.getMangeRegisterRequest());
+               ManagePeopleViewResponse actual = managePeopleImplement.getDate(manageRegisterRequestTest.getMangeRegisterRequest().getManageTaxId());
                ResponseManagePeopleTest expected = mapper.readValue(FileUtils.readFileToString(new File(FilenameUtils.concat("./resources/managePeopleDetail/result", file.getName())), StandardCharsets.UTF_8), ResponseManagePeopleTest.class);
                // ASSERT
                assertEquals(expected.getManagePeopleDetailResponse().get(0).getAddress(), actual.getManagePeopleDetailResponse().get(0).getAddress());

@@ -36,9 +36,9 @@ public class ManagePeopleImplement implements ManagePeopleService {
     private  ManageMasterDistrictRepository manageMasterDistrictRepository;
 
     @Override
-    public ManagePeopleViewResponse getDate(MangeRegisterRequest mangeRegisterRequest) {
+    public ManagePeopleViewResponse getDate(String mangeRegisterId) {
         logger.info("===== Start GetData ManagePeopleDetail=======");
-        logger.info("manageTaxId : " + mangeRegisterRequest.getManageTaxId());
+        logger.info("manageTaxId : " + mangeRegisterId);
         List<ManagePeopleDetailResponse> managePeopleDetailResponseList = new ArrayList<>();
         ManagePeopleDetailResponse managePeopleDetailResponse = new ManagePeopleDetailResponse();
         ManagePeopleViewResponse managePeopleViewResponse = new ManagePeopleViewResponse();
@@ -47,7 +47,7 @@ public class ManagePeopleImplement implements ManagePeopleService {
         String message = "";
 
         try {
-            List<MangePeopleDetail> mangePeopleDetailList = this.managePeopleDetailRepository.searchByManagePeopleTaxIdLike(mangeRegisterRequest.getManageTaxId());
+            List<MangePeopleDetail> mangePeopleDetailList = this.managePeopleDetailRepository.searchByManagePeopleTaxIdLike(mangeRegisterId);
             if (mangePeopleDetailList.size() > 0) {
                 for (MangePeopleDetail data : mangePeopleDetailList) {
                     managePeopleDetailResponse = this.setObjectDetailView(data);
