@@ -4,24 +4,27 @@ import com.example.projectTestDemo.dtoRequest.CreateAccountRequest;
 import com.example.projectTestDemo.dtoRequest.ExportExcelRequest;
 import com.example.projectTestDemo.dtoRequest.LoginRequest;
 import com.example.projectTestDemo.dtoResponse.ImportExcelManageUserResponse;
-import com.example.projectTestDemo.dtoResponse.JwtResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
+import com.example.projectTestDemo.dtoResponse.ValidateSchemaResponse;
 import com.example.projectTestDemo.entity.MangePeopleDetail;
 import com.example.projectTestDemo.entity.ManageUser;
+import com.example.projectTestDemo.environment.Constant;
 import com.example.projectTestDemo.exception.ResponseException;
 import com.example.projectTestDemo.queue.Push;
 import com.example.projectTestDemo.repository.ManagePeopleDetailRepository;
 import com.example.projectTestDemo.repository.UserRepository;
+import com.example.projectTestDemo.response.custom.ResponseMapper;
 import com.example.projectTestDemo.service.ManageDetailService;
+import com.example.projectTestDemo.service.validation.ValidationAbstract;
+import com.example.projectTestDemo.service.validation.ValidatorFactory;
+import com.example.projectTestDemo.service.validation.custom.ValidatorSchema;
 import com.example.projectTestDemo.tools.UtilityTools;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -35,16 +38,12 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 
@@ -55,14 +54,20 @@ public class ManageDetailImplement implements ManageDetailService {
     private final UserRepository userRepository;
     private final JwtImplement jwtImplement;
     private RabbitTemplate rabbitTemplate;
+    private ValidatorSchema validatorSchema;
+    private ResponseMapper responseMapper;
+    private ValidatorFactory validatorFactory;
 
     @Autowired
     public ManageDetailImplement(ManagePeopleDetailRepository managePeopleDetailRepository,
-            UserRepository userRepository,RabbitTemplate rabbitTemplate,JwtImplement jwtImplement) {
+            UserRepository userRepository,RabbitTemplate rabbitTemplate,JwtImplement jwtImplement,ValidatorSchema validatorSchema,ResponseMapper responseMapper,ValidatorFactory validatorFactory) {
         this.managePeopleDetailRepository = managePeopleDetailRepository;
         this.userRepository = userRepository;
         this.rabbitTemplate = rabbitTemplate;
         this.jwtImplement = jwtImplement;
+        this.validatorSchema = validatorSchema;
+        this.responseMapper = responseMapper;
+        this.validatorFactory = validatorFactory;
     }
 
     @Value("${jwt.secretkey}")
@@ -138,16 +143,18 @@ public class ManageDetailImplement implements ManageDetailService {
         logger.info("===== Start Login =======");
         logger.info("username : " + loginRequest.getUsername());
         UtilityTools utilityTools = new UtilityTools();
-        ManageUser manageUser = this.userRepository.findByUsername(loginRequest.getUsername());
-        Boolean checkpass = true;
+
         try {
+            ManageUser manageUser = this.userRepository.findByUsername(loginRequest.getUsername());
+
+            Boolean checkPass = true;
             Boolean checkObject = ObjectUtils.isEmpty(manageUser);
             logger.info("checkObject : " + checkObject);
             if (!checkObject) {
-                checkpass = utilityTools.checkPassphrases(manageUser.getPassword(),
+                checkPass = utilityTools.checkPassphrases(manageUser.getPassword(),
                         loginRequest.getPassword());
-                logger.info("checkpass : " + checkpass);
-                if (!checkpass) {
+                logger.info("checkpass : " + checkPass);
+                if (!checkPass) {
                     return new Response(false, "บัญชีผู้ใช้งานหรือ รหัสผ่านไม่ถูกต้องโปรดตรวจสอบ", "500");
                 }
             } else {
@@ -197,6 +204,45 @@ public class ManageDetailImplement implements ManageDetailService {
             return new Response(false, "ส่งไม่สำเร็จ", "500");
         }
         return new Response(true, "ส่งสำเร็จ", "200");
+    }
+
+    @Override
+    public Response testValidationLoginRequest(String jsonRequest) {
+        UtilityTools utilityTools = new UtilityTools();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        ValidationAbstract validator = validatorFactory.getValidator(Constant.REQUEST_LOGIN);
+        ValidateSchemaResponse validateSchemaResponse = validator.validate(Constant.REQUEST_LOGIN, jsonRequest);
+
+        try {
+            if(validateSchemaResponse.isStatus()){
+                LoginRequest loginRequest = objectMapper.readValue(jsonRequest,LoginRequest.class);
+                ManageUser manageUser = this.userRepository.findByUsername(loginRequest.getUsername());
+                //map response to file response.vm
+                String jsonResponse = responseMapper.mapSpResponseToJson(Constant.REQUEST_LOGIN, objectMapper.writeValueAsString(manageUser));
+                Gson gson = new GsonBuilder().serializeNulls().create();
+                logger.info("jsonResponse" + gson.toJson(jsonResponse));
+
+                Boolean checkPass = true;
+                Boolean checkObject = ObjectUtils.isEmpty(manageUser);
+                logger.info("checkObject : " + checkObject);
+                if (!checkObject) {
+                    checkPass = utilityTools.checkPassphrases(manageUser.getPassword(),
+                            loginRequest.getPassword());
+                    logger.info("checkpass : " + checkPass);
+                    if (!checkPass) {
+                        return new Response(false, "บัญชีผู้ใช้งานหรือ รหัสผ่านไม่ถูกต้องโปรดตรวจสอบ", "500");
+                    }
+                } else {
+                    return new Response(false, "บัญชีผู้ใช้งานไม่มีในระบบ", "500");
+                }
+            }else {
+                return new Response(false, validateSchemaResponse.getMessage(), "500");
+            }
+        }catch (ResponseException | JsonProcessingException | UnsupportedEncodingException | NoSuchAlgorithmException e){
+            logger.error("error : " + e.getMessage());
+        }
+        return new Response(true, "เข้าสู่ระบบสำเร็จ", "200");
     }
 
     public void exportSearchUserByApproved(HttpServletResponse response, ExportExcelRequest dto) throws IOException {

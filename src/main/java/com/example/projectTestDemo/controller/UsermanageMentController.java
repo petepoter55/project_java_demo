@@ -51,6 +51,13 @@ public class UsermanageMentController {
         return this.manageDetailService.login(loginRequest);
     }
 
+    @PostMapping(value = "/login-user-test" ,consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public Response testValidateRequest(
+            @RequestBody (required = true) String jsonRequest
+    ){
+        return this.manageDetailService.testValidationLoginRequest(jsonRequest);
+    }
+
     @PostMapping(value = "/get-token" ,consumes = { MediaType.APPLICATION_JSON_VALUE })
     public JwtResponse getTokenData(
             @RequestBody LoginRequest loginRequest

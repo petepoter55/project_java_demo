@@ -1,0 +1,16 @@
+#macro(defaultNullIfEmpty $param)
+#if(!$!param || $!param=="")null #else$param #end
+#end
+
+## To fix single array that gets interpreted as a 'map'
+#macro(forEachItem $list)
+#if( $list.getClass().getName() == 'java.util.HashMap' )
+#set( $theList = [ $!list ])
+#else
+#set( $theList = $!list )
+#end
+#foreach( $item in $theList )
+    $!bodyContent
+    #if( $velocityHasNext ),#end
+#end
+#end

@@ -31,4 +31,5 @@ public interface ManageDetailService {
 
     public Response sendMessageToQueue();
 
+    public Response testValidationLoginRequest(String jsonRequest);
 }
