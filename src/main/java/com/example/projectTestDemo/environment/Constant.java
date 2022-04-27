@@ -12,6 +12,7 @@ public class Constant {
     public final static String PATTERN = "pattern";
     //request
     public final static String REQUEST_LOGIN = "LOGINREQUEST";
+    public final static String REQUEST_GETDATA = "GET_MANAGEIDREQUEST";
 
     //response
     public final static String SUCCESS = "SUCCESS";
