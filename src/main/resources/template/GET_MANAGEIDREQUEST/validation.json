@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "manageId": {
+      "type": "string",
+      "minLength": 1 ,
+      "maxLength": 10
+    }
+  },
+  "required": [
+    "manageId"
+  ]
+}

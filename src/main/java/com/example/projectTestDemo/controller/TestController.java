@@ -6,9 +6,11 @@ import com.example.projectTestDemo.dtoRequest.jaxBRequest.ManagePeopleJaxBRespon
 import com.example.projectTestDemo.dtoResponse.ManagePeopleViewResponse;
 import com.example.projectTestDemo.model.RequestMapper;
 import com.example.projectTestDemo.service.AsyncService;
+import com.example.projectTestDemo.service.ManageDetailVelocityService;
 import com.example.projectTestDemo.service.validation.ValidationAbstract;
 import com.example.projectTestDemo.service.validation.ValidatorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,8 @@ public class TestController {
     private RequestMapper requestMapper;
     @Autowired
     private AsyncService asyncService;
+    @Autowired
+    private ManageDetailVelocityService manageDetailVelocityService;
 
     @GetMapping(value = "/getDataTest")
     public ValidationAbstract getDataTest(
@@ -67,5 +71,12 @@ public class TestController {
     ){
         CompletableFuture<ManagePeopleViewResponse> data = this.asyncService.inquiryGetDataRestTemplate("001",httpServletRequest.getHeader("token"));
         return data.join();
+    }
+
+    @RequestMapping(value = "/getDataVelocity", method = RequestMethod.GET)
+    public ResponseEntity<String> getDataVelocity(
+            @RequestBody (required = true) String jsonRequest
+    ){
+        return this.manageDetailVelocityService.getDateVelocity(jsonRequest);
     }
 }

@@ -1,0 +1,16 @@
+{
+    "firstname":"$managePeopleName",
+    "lastname":"$managePeopleLastName",
+    "email":"$email",
+    "manageTaxId": "$managePeopleTaxId",
+    "referenceNo": "$refNo",
+    "address": "$address",
+    "village": "$village",
+    "moo": "$moo",
+    "soi": "$soi",
+    "districtId": "$districtId",
+    "subProvinceId": "$subProvinceId",
+    "proviceId": "$proviceId",
+    "postCode": "$postCode",
+    "tel": "$tel"
+}
