@@ -30,7 +30,7 @@ public class RabbitMqImplement implements RabbitMqService {
                 push.requestUpdateManage(mangePeopleDetail);
             }
         }catch (ResponseException e){
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
             return new Response(false, Constant.ERROR_SEND_MQ, Constant.STATUS_CODE_FAIL);
         }
         return new Response(true, Constant.SUCCESS_SEND_MQ, Constant.STATUS_CODE_SUCCESS);

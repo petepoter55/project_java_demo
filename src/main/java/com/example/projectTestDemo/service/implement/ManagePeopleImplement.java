@@ -67,7 +67,7 @@ public class ManagePeopleImplement implements ManagePeopleService {
             managePeopleViewResponse.setManagePeopleDetailResponse(managePeopleDetailResponseList);
 
         } catch (ResponseException | ParseException e) {
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
             managePeopleViewResponse.setStatus(false);
             managePeopleViewResponse.setMessage(e.getMessage());
             managePeopleViewResponse.setManagePeopleDetailResponse(null);
@@ -84,7 +84,7 @@ public class ManagePeopleImplement implements ManagePeopleService {
             this.managePeopleDetailRepository.deleteById(id);
 
         } catch (ResponseException e) {
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
             return new Response(false, e.getMessage(), "500");
         }
         return new Response(true, "ลบข้อมูลสำเร็จ", "200");
@@ -109,7 +109,7 @@ public class ManagePeopleImplement implements ManagePeopleService {
             }
 
         } catch (ResponseException | ParseException e) {
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
             return new Response(false, e.getMessage(), Constant.STATUS_CODE_FAIL);
         }
         return new Response(true, Constant.SUCCESS_PEOPLE, Constant.STATUS_CODE_SUCCESS);
@@ -127,7 +127,7 @@ public class ManagePeopleImplement implements ManagePeopleService {
             }
 
         } catch (ResponseException | ParseException e) {
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
             return new Response(false, Constant.ERROR_UPDATE_PEOPLE, Constant.STATUS_CODE_FAIL);
         }
         this.managePeopleDetailRepository.save(mangePeopleDetail);
@@ -196,7 +196,7 @@ public class ManagePeopleImplement implements ManagePeopleService {
                 isRegis = false;
             }
         }catch (ResponseException ex){
-            logger.error(ex.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,ex.getMessage()));
         }
 
         return isRegis;

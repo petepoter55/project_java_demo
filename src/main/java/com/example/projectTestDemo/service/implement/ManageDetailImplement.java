@@ -126,7 +126,7 @@ public class ManageDetailImplement implements ManageDetailService {
                 return new Response(false, Constant.ERROR_CREATE_ACCOUNT, Constant.STATUS_CODE_FAIL);
             }
         } catch (ResponseException | NoSuchAlgorithmException | UnsupportedEncodingException | ParseException e) {
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
             return new Response(false, Constant.ERROR_CREATE_ACCOUNT, Constant.STATUS_CODE_FAIL);
         }
         logger.info("===== End CreateAccount =======");
@@ -157,7 +157,7 @@ public class ManageDetailImplement implements ManageDetailService {
             }
 
         } catch (ResponseException | NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
             return new Response(false, Constant.ERROR_LOGIN, Constant.STATUS_CODE_FAIL);
         }
         logger.info("===== End Login =======");
@@ -198,7 +198,7 @@ public class ManageDetailImplement implements ManageDetailService {
                 return new Response(false, validateSchemaResponse.getMessage(), Constant.STATUS_CODE_FAIL);
             }
         }catch (ResponseException | JsonProcessingException | UnsupportedEncodingException | NoSuchAlgorithmException e){
-            logger.error("error : " + e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         }
         return new Response(true, Constant.SUCCESS_LOGIN, Constant.STATUS_CODE_SUCCESS);
     }

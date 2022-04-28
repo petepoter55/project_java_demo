@@ -43,6 +43,7 @@ public class Constant {
     public final static String EXPECTED_RESULT = "Expected : -> %s";
     public final static String ACTUAL_RESULT = "Actual   : -> %s";
     public final static String CASE_INFO = "%s_%s";
+    public final static String THROW_EXCEPTION = "Error : %s";
     public final static String DOES_NOT_MATCH_PATTERN = "_does_not_match_pattern_";
     public final static String RAISED_EXCEPTION_IS_NULL = "raisedException is null.";
 

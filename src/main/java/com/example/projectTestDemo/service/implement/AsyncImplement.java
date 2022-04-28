@@ -1,6 +1,7 @@
 package com.example.projectTestDemo.service.implement;
 
 import com.example.projectTestDemo.dtoResponse.ManagePeopleViewResponse;
+import com.example.projectTestDemo.environment.Constant;
 import com.example.projectTestDemo.exception.ResponseException;
 import com.example.projectTestDemo.service.AsyncService;
 import org.apache.log4j.Logger;
@@ -33,7 +34,7 @@ public class AsyncImplement implements AsyncService {
             managePeopleViewResponse = restTemplate.exchange("http://localhost:8083/peach/api/getData/{manageId}", HttpMethod.GET,requestEntity,ManagePeopleViewResponse.class,manageId);
 
         }catch (ResponseException e){
-            logger.error(e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         }
         return CompletableFuture.completedFuture(managePeopleViewResponse.getBody());
     }

@@ -181,7 +181,7 @@ public class CaseGenerator {
                             type = null;
                             typeList = null;
                         }catch (ResponseException | IllegalAccessException | ClassNotFoundException e){
-                            logger.error("error : " + e.getMessage());
+                            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
                         }
                         index++;
                     }
@@ -192,9 +192,9 @@ public class CaseGenerator {
                 logger.info("case : " + Arrays.toString(tempArray));
             }
         }catch (ResponseException e){
-            logger.error("error : " + e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         }catch (IOException ex){
-            logger.error("error : " + ex.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,ex.getMessage()));
         }
         return parameterArrayList.toArray();
     }

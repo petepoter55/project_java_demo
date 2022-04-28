@@ -34,7 +34,7 @@ public class VerifyUserImplement implements VerifyUserService {
                 throw new ResponseException(Constant.STATUS_CODE_FOUND, Constant.ERROR_TOKEN_INTERCEPTOR);
             }
         } catch (ResponseException e) {
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
             throw new ResponseException(e.getExceptionCode(),e.getMessage());
         }
         logger.info("===== done verify interceptor =======");

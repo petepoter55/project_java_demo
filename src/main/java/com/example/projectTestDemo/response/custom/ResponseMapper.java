@@ -1,5 +1,6 @@
 package com.example.projectTestDemo.response.custom;
 
+import com.example.projectTestDemo.environment.Constant;
 import com.example.projectTestDemo.exception.ResponseException;
 import com.example.projectTestDemo.response.ResponseMapperAbstract;
 import com.example.projectTestDemo.tools.VelocityUtil;
@@ -35,7 +36,7 @@ public class ResponseMapper extends ResponseMapperAbstract {
             TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>() {};
             respData = mapper.readValue(response, typeRef);
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         }
 
         return respData;

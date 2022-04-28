@@ -3,6 +3,7 @@ package com.example.projectTestDemo.service.implement;
 import com.example.projectTestDemo.dtoRequest.UnzipRequest;
 import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.entity.ManageUploadTracking;
+import com.example.projectTestDemo.environment.Constant;
 import com.example.projectTestDemo.repository.ManageUploadTrackingRepository;
 
 import com.example.projectTestDemo.service.ManageZipService;
@@ -72,7 +73,7 @@ public class ManageZipImplement implements ManageZipService {
                 this.manageUploadTrackingRepository.save(manageUploadTracking);
             }
         }catch (Exception e){
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
             return new Response(false, e.getMessage(), "500");
         }
         logger.info("============================= Done Upload ZIP ==============================");
@@ -94,7 +95,7 @@ public class ManageZipImplement implements ManageZipService {
                 }
             }
         }catch (Exception e){
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         }
         logger.info("============================= Done UNZIP ==============================");
     }
@@ -116,7 +117,7 @@ public class ManageZipImplement implements ManageZipService {
         try {
             fos.write(file);
         }catch (IOException ex){
-            logger.error("error : "+ ex.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,ex.getMessage()));
         }finally {
             if (fos != null) {
                 fos.close();
@@ -161,7 +162,7 @@ public class ManageZipImplement implements ManageZipService {
             zis.close();
 
         }catch (Exception ex){
-            logger.error("error : "+ ex.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,ex.getMessage()));
             statusUnzip = false;
         }
 
@@ -189,7 +190,7 @@ public class ManageZipImplement implements ManageZipService {
                fileName.add(d.getName());
            }
         }catch (Exception e){
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         }finally {
 
         }

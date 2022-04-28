@@ -1,5 +1,6 @@
 package com.example.projectTestDemo.tools;
 
+import com.example.projectTestDemo.environment.Constant;
 import com.example.projectTestDemo.exception.ResponseException;
 import com.example.projectTestDemo.model.RequestKeeper;
 import org.apache.log4j.Logger;
@@ -40,7 +41,7 @@ public class VelocityUtil {
         try {
             prop.load(getClass().getClassLoader().getResourceAsStream("velocity.properties"));
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         }
         velocityEngine.init(prop);
 

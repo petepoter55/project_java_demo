@@ -3,6 +3,7 @@ package com.example.projectTestDemo.service.implement;
 import com.example.projectTestDemo.dtoRequest.ExportExcelRequest;
 import com.example.projectTestDemo.dtoResponse.ImportExcelManageUserResponse;
 import com.example.projectTestDemo.entity.ManageUser;
+import com.example.projectTestDemo.environment.Constant;
 import com.example.projectTestDemo.repository.UserRepository;
 import com.example.projectTestDemo.service.FileService;
 import org.apache.log4j.Logger;
@@ -44,7 +45,7 @@ public class FileImplement implements FileService {
         try {
             this.exportSearchUserByApproved(response, exportExcelRequest);
         } catch (Exception e) {
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         }
     }
 
@@ -107,7 +108,7 @@ public class FileImplement implements FileService {
             workbook.close();
 
         } catch (Exception e) {
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         } finally {
             if (outStream != null) {
                 outStream.close();
@@ -134,7 +135,7 @@ public class FileImplement implements FileService {
                 }
             }
         } catch (Exception e) {
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         } finally {
             workbook.close();
         }

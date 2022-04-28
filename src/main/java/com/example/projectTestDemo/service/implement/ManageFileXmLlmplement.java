@@ -3,6 +3,8 @@ package com.example.projectTestDemo.service.implement;
 
 import com.example.projectTestDemo.dtoResponse.ValidateXmlResponse;
 import com.example.projectTestDemo.entity.ManageConfigXpath;
+import com.example.projectTestDemo.environment.Constant;
+import com.example.projectTestDemo.exception.ResponseException;
 import com.example.projectTestDemo.repository.ManageConfigXpathRepository;
 import com.example.projectTestDemo.repository.ManageDocumentTypeRepository;
 import com.example.projectTestDemo.service.ManageFileXmlService;
@@ -15,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -29,24 +33,21 @@ public class ManageFileXmLlmplement implements ManageFileXmlService {
     @Override
     public String changeFormatXml(MultipartFile file) {
         String message = "";
-        String message2 = "";
+
         try {
             if (!file.isEmpty() && file != null) {
                 ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
 
-                // solution 1
-                // message = new BufferedReader(
-                // new InputStreamReader(stream, StandardCharsets.UTF_8))
-                // .lines()
-                // .collect(Collectors.joining("\n"));
+                 message = new BufferedReader(
+                 new InputStreamReader(stream, StandardCharsets.UTF_8))
+                 .lines()
+                 .collect(Collectors.joining("\n"));
 
-                // solution 2
-//                message = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
             } else {
-                throw new Exception();
+                throw new ResponseException();
             }
         } catch (Exception e) {
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         }
 
         return message;
@@ -78,7 +79,7 @@ public class ManageFileXmLlmplement implements ManageFileXmlService {
                 }
             }
         } catch (Exception e) {
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
             return new ValidateXmlResponse(false, "validate xml fails", "500", result);
         } finally {
             if (inputStreamXmlSignXpath != null) {

@@ -44,7 +44,7 @@ public class JwtImplement implements JwtService {
                 jwtResponse = this.getDataJwt(manageUser.getToken_user());
             }
         } catch (ResponseException e) {
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         }
         return jwtResponse;
     }
@@ -61,7 +61,7 @@ public class JwtImplement implements JwtService {
                 return new Response(false, Constant.ERROR_GENERATE_TOKEN, Constant.STATUS_CODE_FAIL);
             }
         }catch (ResponseException e){
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         }
         return new Response(true, Constant.SUCCESS_GENERATE_TOKEN, Constant.STATUS_CODE_SUCCESS);
     }
@@ -89,7 +89,7 @@ public class JwtImplement implements JwtService {
             jwtResponse.setManagePeopleTaxId(jws.getBody().get("managePeopleTaxId").toString());
             jwtResponse.setIssueDate(jws.getBody().getIssuedAt());
         } catch (ResponseException e) {
-            logger.error("error : "+ e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         }
         return jwtResponse;
     }

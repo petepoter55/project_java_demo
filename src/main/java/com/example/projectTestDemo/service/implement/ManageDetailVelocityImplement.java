@@ -59,7 +59,7 @@ public class ManageDetailVelocityImplement implements ManageDetailVelocityServic
                 return new ResponseEntity<>(validateSchemaResponse.getMessage().replace("#/",""), HttpStatus.LENGTH_REQUIRED);
             }
         }catch (ResponseException | JsonProcessingException ex){
-            logger.error(ex.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,ex.getMessage()));
         }
         return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
     }

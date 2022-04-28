@@ -1,5 +1,6 @@
 package com.example.projectTestDemo.model;
 
+import com.example.projectTestDemo.environment.Constant;
 import com.example.projectTestDemo.exception.ResponseException;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.ClassPathResource;
@@ -39,7 +40,7 @@ public class RequestKeeper {
                 requests.put(requestName, templateString);
                 return templateString;
             } catch (IOException e) {
-                logger.error(e.getMessage(), e);
+                logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
             }
         }
         return requests.get(requestName);

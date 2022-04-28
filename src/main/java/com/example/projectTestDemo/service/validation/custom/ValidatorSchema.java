@@ -27,7 +27,7 @@ public class ValidatorSchema extends ValidationAbstract {
         try {
             schemaConfigFactory = requestKeeper.getTemplate(requestName, pathSchemaRequest);
         }catch (ResponseException e){
-            logger.error("error :" + e.getMessage());
+            logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         }
         return schemaConfigFactory;
     }
@@ -47,10 +47,10 @@ public class ValidatorSchema extends ValidationAbstract {
              Schema schema = SchemaLoader.load(jsonSchema);
              schema.validate(jsonSubject);
          }catch (ValidationException ex){
-             logger.error("error : " + ex.getMessage());
+             logger.error(String.format(Constant.THROW_EXCEPTION,ex.getMessage()));
              return new ValidateSchemaResponse(false,ex.getMessage());
          }catch (JSONException e){
-             logger.error("error : " + e.getMessage());
+             logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
              return new ValidateSchemaResponse(false,e.getMessage());
          }
         return new ValidateSchemaResponse(true, Constant.SUCCESS);
