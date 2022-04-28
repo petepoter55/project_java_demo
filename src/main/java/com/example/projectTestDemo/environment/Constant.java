@@ -1,6 +1,12 @@
 package com.example.projectTestDemo.environment;
 
 public class Constant {
+    // status code
+    public final static String STATUS_CODE_SUCCESS = "200";
+    public final static String STATUS_CODE_FAIL = "500";
+    public final static String STATUS_CODE_ERROR = "400";
+    public final static String STATUS_CODE_FOUND = "404";
+
     public final static String TEMPLATE_PATH = "src/main/resources/template/";
     public final static String VALIDATION_FILE = "/validation.json";
 
@@ -39,4 +45,36 @@ public class Constant {
     public final static String CASE_INFO = "%s_%s";
     public final static String DOES_NOT_MATCH_PATTERN = "_does_not_match_pattern_";
     public final static String RAISED_EXCEPTION_IS_NULL = "raisedException is null.";
+
+    //update data
+    public final static String SUCCESS_UPDATE_PEOPLE = "อัปเดตข้อมูลเสร็จเรียบร้อย";
+    public final static String ERROR_UPDATE_PEOPLE = "อัปเดตข้อมูลไม่สำเร็จ";
+
+    //create peopleData
+    public final static String ERROR_PEOPLE_CHECKDATA_DUPLICATE = "ข้อมูลนี้ได้่ทำการลงทะเบียน เรียบร้อยแล้ว";
+    public final static String ERROR_PEOPLE_CHECKDATA_FOUND = "ไม่พบข้อมูลที่อยู่ในระบบ";
+    public final static String SUCCESS_PEOPLE = "ลงทะเบียนเรียบร้อย";
+
+    //create Account 
+    public final static String SUCCESS_CREATE_ACCOUNT = "สร้างบัญชีผู้ใช้งานเสร็จเรียบร้อย";
+    public final static String ERROR_CREATE_ACCOUNT = "สร้างบัญชีผู้ใช้งานไม่สำเร็จ";
+    public final static String ERROR_INPUT_CREATE_ACCOUNT = "รหัสผ่านระบุไม่ถูกต้อง เนื่องจาก ระบุรหัสผ่านไม่ตรงกับยืนยันรหัสผ่าน";
+
+    //login
+    public final static String SUCCESS_LOGIN = "เข้าสู่ระบบสำเร็จ";
+    public final static String ERROR_INPUT_LOGIN = "รหัสผ่านระบุไม่ถูกต้อง เนื่องจาก ระบุรหัสผ่านไม่ตรงกับยืนยันรหัสผ่าน";
+    public final static String ERROR_FOUND_DATA_LOGIN = "บัญชีผู้ใช้งานไม่มีในระบบ";
+    public final static String ERROR_LOGIN = "เข้าสู่ระบบไม่สำเร็จ";
+
+    //rabbit MQ
+    public final static String SUCCESS_SEND_MQ = "ส่งสำเร็จ";
+    public final static String ERROR_SEND_MQ = "ส่งไม่สำเร็จ";
+
+    //generate JWT token
+    public final static String SUCCESS_GENERATE_TOKEN = "สร้าง token สำเร็จ";
+    public final static String ERROR_GENERATE_TOKEN = "สร้าง token ไม่สำเร็จ";
+
+    //verify interceptor
+    public final static String ERROR_DATA_INTERCEPTOR = "Data Not Found";
+    public final static String ERROR_TOKEN_INTERCEPTOR = "Token Not Found";
 }

@@ -10,6 +10,8 @@ import com.example.projectTestDemo.service.ManagePeopleService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +30,15 @@ public class MangePeopleController {
     ManageMasterDistrictRepository manageMasterDistrictRepository;
 
     @ApiOperation(value = "get Data ManagePeople", notes = "Inquiry ManagePeople by manageId")
-    @GetMapping(value = "/getData/{manageId}",consumes = { MediaType.APPLICATION_JSON_VALUE })
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 409, message = "Business Error"),
+            @ApiResponse(code = 500, message = "Internal server error occurred"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
+    @RequestMapping(value = "/getData/{manageId}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public  @ResponseBody ManagePeopleViewResponse getDatePeople(
             @ApiParam(name = "manageId", value = "The manage ID", required = true)
             @PathVariable(value = "manageId") String manageId

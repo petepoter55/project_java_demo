@@ -47,6 +47,7 @@ public class ManageDetailVelocityImplement implements ManageDetailVelocityServic
                 GetDataRequest getDataRequest = objectMapper.readValue(jsonRequest,GetDataRequest.class);
 
                 List<MangePeopleDetail> mangePeopleDetailList = this.managePeopleDetailRepository.searchByManagePeopleTaxIdLike(getDataRequest.getManageId());
+//                TODO : research how to convert arraylist to hashMap or Map Array to VelocityTemplate
                 response = objectMapper.convertValue(mangePeopleDetailList.get(0),Map.class);
 
                 JSONObject jsonObject = new JSONObject(response);

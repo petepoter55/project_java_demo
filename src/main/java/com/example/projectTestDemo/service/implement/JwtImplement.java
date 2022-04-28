@@ -4,6 +4,7 @@ import com.example.projectTestDemo.dtoRequest.LoginRequest;
 import com.example.projectTestDemo.dtoResponse.JwtResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.entity.ManageUser;
+import com.example.projectTestDemo.environment.Constant;
 import com.example.projectTestDemo.exception.ResponseException;
 import com.example.projectTestDemo.repository.UserRepository;
 import com.example.projectTestDemo.service.JwtService;
@@ -57,12 +58,12 @@ public class JwtImplement implements JwtService {
                 manageUser.setToken_user(afterToken);
                 this.userRepository.save(manageUser);
             }else {
-                return new Response(false, "สร้าง token ไม่สำเร็จ", "500");
+                return new Response(false, Constant.ERROR_GENERATE_TOKEN, Constant.STATUS_CODE_FAIL);
             }
         }catch (ResponseException e){
             logger.error("error : "+ e.getMessage());
         }
-        return new Response(true, "สร้าง token สำเร็จ", "200");
+        return new Response(true, Constant.SUCCESS_GENERATE_TOKEN, Constant.STATUS_CODE_SUCCESS);
     }
 
     public String generate(String username, String email, String managePeopleTaxId) {

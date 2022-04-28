@@ -119,18 +119,18 @@ public class ManageDetailImplement implements ManageDetailService {
                     user.setToken_user(jwtImplement.generate(username, mangePeopleDetail.getEmail(), mangePeopleDetail.getManagePeopleTaxId()));
                     this.userRepository.save(user);
                 } else {
-                    return new Response(false, "รหัสผ่านระบุไม่ถูกต้อง เนื่องจาก ระบุรหัสผ่านไม่ตรงกับยืนยันรหัสผ่าน",
-                            "500");
+                    return new Response(false, Constant.ERROR_INPUT_CREATE_ACCOUNT,
+                            Constant.STATUS_CODE_FAIL);
                 }
             } else {
-                return new Response(false, "สร้างบัญชีผู้ใช้งานไม่สำเร็จ", "500");
+                return new Response(false, Constant.ERROR_CREATE_ACCOUNT, Constant.STATUS_CODE_FAIL);
             }
         } catch (ResponseException | NoSuchAlgorithmException | UnsupportedEncodingException | ParseException e) {
             logger.error("error : "+ e.getMessage());
-            return new Response(false, "สร้างบัญชีผู้ใช้งานไม่สำเร็จ", "500");
+            return new Response(false, Constant.ERROR_CREATE_ACCOUNT, Constant.STATUS_CODE_FAIL);
         }
         logger.info("===== End CreateAccount =======");
-        return new Response(true, "สร้างบัญชีผู้ใช้งานเสร็จเรียบร้อย", "500");
+        return new Response(true, Constant.SUCCESS_CREATE_ACCOUNT, Constant.STATUS_CODE_SUCCESS);
     }
 
     @Override
@@ -155,18 +155,18 @@ public class ManageDetailImplement implements ManageDetailService {
                         loginRequest.getPassword());
                 logger.info("checkpass : " + checkPass);
                 if (!checkPass) {
-                    return new Response(false, "บัญชีผู้ใช้งานหรือ รหัสผ่านไม่ถูกต้องโปรดตรวจสอบ", "500");
+                    return new Response(false, Constant.ERROR_INPUT_LOGIN, Constant.STATUS_CODE_FAIL);
                 }
             } else {
-                return new Response(false, "บัญชีผู้ใช้งานไม่มีในระบบ", "500");
+                return new Response(false, Constant.ERROR_FOUND_DATA_LOGIN, Constant.STATUS_CODE_FOUND);
             }
 
         } catch (ResponseException | NoSuchAlgorithmException | UnsupportedEncodingException e) {
             logger.error("error : "+ e.getMessage());
-            return new Response(false, "เข้าสู่ระบบไม่สำเร็จ", "500");
+            return new Response(false, Constant.ERROR_LOGIN, Constant.STATUS_CODE_FAIL);
         }
         logger.info("===== End Login =======");
-        return new Response(true, "เข้าสู่ระบบสำเร็จ", "200");
+        return new Response(true, Constant.SUCCESS_LOGIN, Constant.STATUS_CODE_SUCCESS);
     }
 
     @Override
@@ -201,9 +201,9 @@ public class ManageDetailImplement implements ManageDetailService {
             }
         }catch (ResponseException e){
             logger.error("error : "+ e.getMessage());
-            return new Response(false, "ส่งไม่สำเร็จ", "500");
+            return new Response(false, Constant.ERROR_SEND_MQ, Constant.STATUS_CODE_FAIL);
         }
-        return new Response(true, "ส่งสำเร็จ", "200");
+        return new Response(true, Constant.SUCCESS_SEND_MQ, Constant.STATUS_CODE_SUCCESS);
     }
 
     @Override
@@ -231,18 +231,18 @@ public class ManageDetailImplement implements ManageDetailService {
                             loginRequest.getPassword());
                     logger.info("checkpass : " + checkPass);
                     if (!checkPass) {
-                        return new Response(false, "บัญชีผู้ใช้งานหรือ รหัสผ่านไม่ถูกต้องโปรดตรวจสอบ", "500");
+                        return new Response(false, Constant.ERROR_INPUT_LOGIN, Constant.STATUS_CODE_FAIL);
                     }
                 } else {
-                    return new Response(false, "บัญชีผู้ใช้งานไม่มีในระบบ", "500");
+                    return new Response(false, Constant.ERROR_FOUND_DATA_LOGIN, Constant.STATUS_CODE_FOUND);
                 }
             }else {
-                return new Response(false, validateSchemaResponse.getMessage(), "500");
+                return new Response(false, validateSchemaResponse.getMessage(), Constant.STATUS_CODE_FAIL);
             }
         }catch (ResponseException | JsonProcessingException | UnsupportedEncodingException | NoSuchAlgorithmException e){
             logger.error("error : " + e.getMessage());
         }
-        return new Response(true, "เข้าสู่ระบบสำเร็จ", "200");
+        return new Response(true, Constant.SUCCESS_LOGIN, Constant.STATUS_CODE_SUCCESS);
     }
 
     public void exportSearchUserByApproved(HttpServletResponse response, ExportExcelRequest dto) throws IOException {

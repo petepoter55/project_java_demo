@@ -7,14 +7,14 @@ import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.entity.ManageMasterDistrict;
 import com.example.projectTestDemo.entity.ManagePeopleVat;
 import com.example.projectTestDemo.entity.MangePeopleDetail;
+import com.example.projectTestDemo.environment.Constant;
 import com.example.projectTestDemo.exception.ResponseException;
 import com.example.projectTestDemo.repository.ManageMasterDistrictRepository;
 import com.example.projectTestDemo.repository.ManagePeopleDetailRepository;
 import com.example.projectTestDemo.repository.ManagePeopleVatRepository;
+import com.example.projectTestDemo.repository.UserRepository;
 import com.example.projectTestDemo.service.ManagePeopleService;
 import com.example.projectTestDemo.tools.UtilityTools;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
@@ -34,6 +34,8 @@ public class ManagePeopleImplement implements ManagePeopleService {
     private  ManagePeopleVatRepository managePeopleVatRepository;
     @Autowired
     private  ManageMasterDistrictRepository manageMasterDistrictRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public ManagePeopleViewResponse getDate(String mangeRegisterId) {
@@ -95,17 +97,22 @@ public class ManagePeopleImplement implements ManagePeopleService {
 
         try {
             if (managePeopleVat != null) {
-                mangePeopleDetail = this.setObjectDetail(managePeopleVat);
-                this.managePeopleDetailRepository.save(mangePeopleDetail);
+                boolean checkData = checkRegisterData(managePeopleVat.getManagePeopleTaxId());
+                if(checkData){
+                    mangePeopleDetail = this.setObjectDetail(managePeopleVat);
+                    this.managePeopleDetailRepository.save(mangePeopleDetail);
+                }else {
+                    return new Response(false, Constant.ERROR_PEOPLE_CHECKDATA_DUPLICATE, Constant.STATUS_CODE_FAIL);
+                }
             } else {
-                return new Response(false, "ไม่พบข้อมูลที่ทำการลงทะเบียน", "500");
+                return new Response(false, Constant.ERROR_PEOPLE_CHECKDATA_FOUND, Constant.STATUS_CODE_FOUND);
             }
 
         } catch (ResponseException | ParseException e) {
             logger.error("error : "+ e.getMessage());
-            return new Response(false, e.getMessage(), "500");
+            return new Response(false, e.getMessage(), Constant.STATUS_CODE_FAIL);
         }
-        return new Response(true, "ลงทะเบียนเรียบร้อบ", "200");
+        return new Response(true, Constant.SUCCESS_PEOPLE, Constant.STATUS_CODE_SUCCESS);
     }
 
     @Override
@@ -121,10 +128,11 @@ public class ManagePeopleImplement implements ManagePeopleService {
 
         } catch (ResponseException | ParseException e) {
             logger.error("error : "+ e.getMessage());
+            return new Response(false, Constant.ERROR_UPDATE_PEOPLE, Constant.STATUS_CODE_FAIL);
         }
         this.managePeopleDetailRepository.save(mangePeopleDetail);
 
-        return new Response(true, "อัปเดตข้อมูลเสร็จเรียบร้อย", "200");
+        return new Response(true, Constant.SUCCESS_UPDATE_PEOPLE, Constant.STATUS_CODE_SUCCESS);
     }
 
     @Override
@@ -177,6 +185,21 @@ public class ManagePeopleImplement implements ManagePeopleService {
         managePeopleDetailResponse.setSoi(mangePeopleDetail.getSoi());
         managePeopleDetailResponse.setTel(mangePeopleDetail.getTel());
         return managePeopleDetailResponse;
+    }
+
+    public boolean checkRegisterData(String manageTaxId){
+        boolean isRegis = true;
+        List<MangePeopleDetail> mangePeopleDetail = new ArrayList<>();
+        try {
+            mangePeopleDetail = this.managePeopleDetailRepository.searchByManagePeopleTaxIdLike(manageTaxId);
+            if(mangePeopleDetail.size() > 0){
+                isRegis = false;
+            }
+        }catch (ResponseException ex){
+            logger.error(ex.getMessage());
+        }
+
+        return isRegis;
     }
 
 }

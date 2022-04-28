@@ -10,6 +10,7 @@ import com.example.projectTestDemo.service.ManageDetailVelocityService;
 import com.example.projectTestDemo.service.validation.ValidationAbstract;
 import com.example.projectTestDemo.service.validation.ValidatorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,7 +74,7 @@ public class TestController {
         return data.join();
     }
 
-    @RequestMapping(value = "/getDataVelocity", method = RequestMethod.GET)
+    @RequestMapping(value = "/getDataVelocity", method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getDataVelocity(
             @RequestBody (required = true) String jsonRequest
     ){

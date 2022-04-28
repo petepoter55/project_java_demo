@@ -2,9 +2,9 @@ package com.example.projectTestDemo.service.implement;
 
 import com.example.projectTestDemo.dtoResponse.JwtResponse;
 import com.example.projectTestDemo.entity.ManageUser;
+import com.example.projectTestDemo.environment.Constant;
 import com.example.projectTestDemo.exception.ResponseException;
 import com.example.projectTestDemo.repository.UserRepository;
-import com.example.projectTestDemo.service.JwtService;
 import com.example.projectTestDemo.service.VerifyUserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +28,10 @@ public class VerifyUserImplement implements VerifyUserService {
                 JwtResponse jwtResponse = this.jwtImplement.getDataJwt(token);
                 ManageUser manageUser = this.userRepository.findByUsername(jwtResponse.getUsername());
                 if (manageUser == null) {
-                    throw new ResponseException("404", "Data Not Found");
+                    throw new ResponseException(Constant.STATUS_CODE_FOUND, Constant.ERROR_DATA_INTERCEPTOR);
                 }
             } else {
-                throw new ResponseException("404", "Token Not Found");
+                throw new ResponseException(Constant.STATUS_CODE_FOUND, Constant.ERROR_TOKEN_INTERCEPTOR);
             }
         } catch (ResponseException e) {
             logger.error("error : "+ e.getMessage());
