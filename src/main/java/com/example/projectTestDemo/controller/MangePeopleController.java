@@ -4,7 +4,6 @@ import com.example.projectTestDemo.dtoRequest.ManageDetailGenXmlRequest;
 import com.example.projectTestDemo.dtoRequest.MangeRegisterRequest;
 import com.example.projectTestDemo.dtoResponse.ManagePeopleViewResponse;
 import com.example.projectTestDemo.dtoResponse.Response;
-import com.example.projectTestDemo.repository.ManageMasterDistrictRepository;
 import com.example.projectTestDemo.service.ManageDetailService;
 import com.example.projectTestDemo.service.ManagePeopleService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,8 +25,6 @@ public class MangePeopleController {
     ManagePeopleService managePeopleService;
     @Autowired
     ManageDetailService manageDetailService;
-    @Autowired
-    ManageMasterDistrictRepository manageMasterDistrictRepository;
 
     @ApiOperation(value = "get Data ManagePeople", notes = "Inquiry ManagePeople by manageId")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success"),
@@ -45,14 +42,6 @@ public class MangePeopleController {
     ){
         return this.managePeopleService.getDate(manageId);
     }
-
-    @GetMapping(value = "/getData1")
-    public String getDataTest(
-//            @RequestBody MangeRegisterRequest mangeRegisterRequest
-    ){
-        return this.manageDetailService.gen();
-    }
-
 
     @PostMapping(value = "/createRegister" ,consumes = { MediaType.APPLICATION_JSON_VALUE })
     public Response createRegister(
@@ -75,17 +64,11 @@ public class MangePeopleController {
         return this.managePeopleService.deleteDate(itemid);
     }
 
-    @PostMapping(value = "/generateXml")
+    @RequestMapping(value = "/generateXml", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public String generateXml(
             @RequestBody ManageDetailGenXmlRequest manageDetailGenXmlRequest
     ) throws JsonProcessingException {
         return this.manageDetailService.generateXml();
-    }
-
-    @PostMapping(value = "/sendQueue")
-    public Response sendQueue(
-    ){
-        return this.manageDetailService.sendMessageToQueue();
     }
 
 }

@@ -4,10 +4,10 @@ import com.example.projectTestDemo.dtoRequest.UnzipRequest;
 import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.entity.ManageUploadTracking;
 import com.example.projectTestDemo.repository.ManageUploadTrackingRepository;
+
 import com.example.projectTestDemo.service.ManageZipService;
 import com.example.projectTestDemo.tools.UtilityTools;
 import org.apache.log4j.Logger;
-import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -80,7 +80,7 @@ public class ManageZipImplement implements ManageZipService {
     }
 
     @Override
-    public void unzipTest(UnzipRequest unzipRequest) {
+    public void unzipFile(UnzipRequest unzipRequest) {
         logger.info("============================= Start UNZIP ==============================");
         logger.info("uploadTracking ID : " + unzipRequest.getUploadTrackingId());
         ManageUploadTracking manageUploadTracking = new ManageUploadTracking();
@@ -130,7 +130,7 @@ public class ManageZipImplement implements ManageZipService {
         boolean statusUnzip = true;
         try {
             String fileZip = manageUploadTracking.getPathName();
-            File destinationDirectory = new File("/Users/boonyaris/Desktop/zipproject/unzip");
+            File destinationDirectory = new File("/Users/boonyaris/Desktop/zipproject/UNZIP_" + new UtilityTools().getFormatsDateMilliString2());
             byte[] buffer = new byte[1024];
             ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));
             ZipEntry zipEntry = zis.getNextEntry();

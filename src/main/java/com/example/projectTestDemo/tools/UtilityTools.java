@@ -47,6 +47,14 @@ public class UtilityTools {
         return df.format(dates);
     }
 
+    public String getFormatsDateMilliString2() throws ParseException {
+        DateFormat df = new SimpleDateFormat("yyyyMMdd");
+        Calendar cal = Calendar.getInstance();
+
+        Date dates = cal.getTime();
+        return df.format(dates);
+    }
+
     public static boolean isNumberic(String number){
         String regex = "\\d+";
         return number.matches(regex);

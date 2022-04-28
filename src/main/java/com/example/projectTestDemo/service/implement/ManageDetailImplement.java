@@ -134,11 +134,6 @@ public class ManageDetailImplement implements ManageDetailService {
     }
 
     @Override
-    public String gen() {
-        return jwtImplement.generate("test", "2", "001");
-    }
-
-    @Override
     public Response login(LoginRequest loginRequest) {
         logger.info("===== Start Login =======");
         logger.info("username : " + loginRequest.getUsername());
@@ -167,43 +162,6 @@ public class ManageDetailImplement implements ManageDetailService {
         }
         logger.info("===== End Login =======");
         return new Response(true, Constant.SUCCESS_LOGIN, Constant.STATUS_CODE_SUCCESS);
-    }
-
-    @Override
-    public void exportExcel(ExportExcelRequest exportExcelRequest, HttpServletResponse response) {
-        try {
-            this.exportSearchUserByApproved(response, exportExcelRequest);
-        } catch (Exception e) {
-            logger.error("error : "+ e.getMessage());
-        }
-    }
-
-    @Override
-    public ImportExcelManageUserResponse importExcel(MultipartFile file) throws IOException {
-        ImportExcelManageUserResponse manageUserList;
-        if(("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet").equals(file.getContentType())){
-             manageUserList = this.importDataExcel(file);
-        }else {
-            return new ImportExcelManageUserResponse(false, "import fail Because file not Excel", "500",null);
-
-        }
-        return manageUserList;
-    }
-
-    @Override
-    public Response sendMessageToQueue() {
-        MangePeopleDetail mangePeopleDetail = this.managePeopleDetailRepository.findById(1);
-
-        try {
-            if(mangePeopleDetail != null){
-                Push push = new Push(rabbitTemplate);
-                push.requestUpdateManage(mangePeopleDetail);
-            }
-        }catch (ResponseException e){
-            logger.error("error : "+ e.getMessage());
-            return new Response(false, Constant.ERROR_SEND_MQ, Constant.STATUS_CODE_FAIL);
-        }
-        return new Response(true, Constant.SUCCESS_SEND_MQ, Constant.STATUS_CODE_SUCCESS);
     }
 
     @Override
@@ -244,98 +202,4 @@ public class ManageDetailImplement implements ManageDetailService {
         }
         return new Response(true, Constant.SUCCESS_LOGIN, Constant.STATUS_CODE_SUCCESS);
     }
-
-    public void exportSearchUserByApproved(HttpServletResponse response, ExportExcelRequest dto) throws IOException {
-        response.setHeader("Content-Type", "application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment; filename=" + "keyword_master" + ".xlsx");
-        OutputStream outStream = null;
-
-        try {
-            // fix column name
-            String[] columns = {
-                    "UID",
-                    "FirstName",
-                    "LastName"
-            };
-
-            Workbook workbook = new XSSFWorkbook();
-
-            CreationHelper createHelper = workbook.getCreationHelper();
-
-            Sheet sheet = workbook.createSheet("master");
-
-            // set style Header
-            Font headerFont = workbook.createFont();
-            headerFont.setBold(true);
-            headerFont.setFontHeightInPoints((short) 14);
-
-            CellStyle headerCellStyle = workbook.createCellStyle();
-            headerCellStyle.setFont(headerFont);
-
-            Row headerRow = sheet.createRow(0);
-
-            // create header cell
-            for (int i = 0; i < columns.length; i++) {
-                Cell cell = headerRow.createCell(i);
-                cell.setCellValue(columns[i]);
-                cell.setCellStyle(headerCellStyle);
-            }
-
-            int rowNum = 1;
-
-            List<ManageUser> list = this.userRepository.findByApproved(dto.getApproved());
-
-            // initialize data in row
-            for (ManageUser d : list) {
-                Row row = sheet.createRow(rowNum++);
-                row.createCell(0).setCellValue(d.getUid().toString());
-                row.createCell(1).setCellValue(d.getFirstName());
-                row.createCell(2).setCellValue(d.getLastName());
-            }
-
-            for (int i = 0; i < columns.length; i++) {
-                sheet.autoSizeColumn(i);
-            }
-
-            // output response file name
-            outStream = response.getOutputStream();
-            workbook.write(outStream);
-            outStream.flush();
-            workbook.close();
-
-        } catch (Exception e) {
-            logger.error("error : "+ e.getMessage());
-        } finally {
-            if (outStream != null) {
-                outStream.close();
-            }
-        }
-    }
-
-    public ImportExcelManageUserResponse importDataExcel(MultipartFile files) throws IOException {
-        List<ManageUser> manageUserList = new ArrayList<>();
-        XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
-        // get sheet in Excel By index
-        XSSFSheet worksheet = workbook.getSheetAt(0);
-        try {
-            for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
-                if (index > 0) {
-                    ManageUser manageUser = new ManageUser();
-
-                    XSSFRow row = worksheet.getRow(index);
-
-                    manageUser.setUid(new BigInteger(row.getCell(0).getStringCellValue()));
-                    manageUser.setFirstName(row.getCell(1).getStringCellValue());
-                    manageUser.setLastName(row.getCell(2).getStringCellValue());
-                    manageUserList.add(manageUser);
-                }
-            }
-        } catch (Exception e) {
-            logger.error("error : "+ e.getMessage());
-        } finally {
-            workbook.close();
-        }
-        return new ImportExcelManageUserResponse(true, "import success", "200",manageUserList);
-    }
-
 }
