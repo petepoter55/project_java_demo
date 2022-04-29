@@ -9,6 +9,7 @@ import com.example.projectTestDemo.service.AsyncService;
 import com.example.projectTestDemo.service.ManageDetailVelocityService;
 import com.example.projectTestDemo.service.validation.ValidationAbstract;
 import com.example.projectTestDemo.service.validation.ValidatorFactory;
+import com.example.projectTestDemo.tools.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,8 @@ public class TestController {
     private AsyncService asyncService;
     @Autowired
     private ManageDetailVelocityService manageDetailVelocityService;
+    @Autowired
+    private EmailUtil emailUtil;
 
     @GetMapping(value = "/getDataTest")
     public ValidationAbstract getDataTest(
@@ -80,4 +83,11 @@ public class TestController {
     ){
         return this.manageDetailVelocityService.getDateVelocity(jsonRequest);
     }
+
+    @RequestMapping(value = "/sendEmail", method = RequestMethod.POST)
+    public void sendEmail(
+    ) {
+        this.emailUtil.sendSimpleMessage();
+    }
+
 }
