@@ -52,7 +52,7 @@ public class ManageDetailVelocityImplement implements ManageDetailVelocityServic
 
                 JSONObject jsonObject = new JSONObject(response);
                 spResponse = jsonObject.toString();
-                //check valueReference velocity by name properties in POJO class
+                //check value Reference velocity by name properties in (Entity or POJO class)
                 jsonResponse = responseMapper.mapSpResponseToJson(Constant.REQUEST_GETDATA,spResponse );
 
             }else {

@@ -46,12 +46,9 @@ public class ValidatorSchema extends ValidationAbstract {
 
              Schema schema = SchemaLoader.load(jsonSchema);
              schema.validate(jsonSubject);
-         }catch (ValidationException ex){
+         }catch (ValidationException | JSONException ex){
              logger.error(String.format(Constant.THROW_EXCEPTION,ex.getMessage()));
              return new ValidateSchemaResponse(false,ex.getMessage());
-         }catch (JSONException e){
-             logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
-             return new ValidateSchemaResponse(false,e.getMessage());
          }
         return new ValidateSchemaResponse(true, Constant.SUCCESS);
     }

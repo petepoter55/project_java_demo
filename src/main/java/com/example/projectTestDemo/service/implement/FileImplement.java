@@ -2,8 +2,10 @@ package com.example.projectTestDemo.service.implement;
 
 import com.example.projectTestDemo.dtoRequest.ExportExcelRequest;
 import com.example.projectTestDemo.dtoResponse.ImportExcelManageUserResponse;
+import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.entity.ManageUser;
 import com.example.projectTestDemo.environment.Constant;
+import com.example.projectTestDemo.exception.ResponseException;
 import com.example.projectTestDemo.repository.UserRepository;
 import com.example.projectTestDemo.service.FileService;
 import org.apache.log4j.Logger;
@@ -16,9 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +51,26 @@ public class FileImplement implements FileService {
         } catch (Exception e) {
             logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
         }
+    }
+
+    @Override
+    public String moveFile(MultipartFile file) throws IOException {
+            String result = null;
+            //create output path directory
+            File outputPath = new File("/Users/boonyaris/Desktop/" + file.getOriginalFilename());
+            FileOutputStream fos = new FileOutputStream(outputPath);
+
+            try {
+                fos.write(file.getBytes());
+            }catch (IOException ex){
+                logger.error(String.format(Constant.THROW_EXCEPTION,ex.getMessage()));
+            }finally {
+                if (fos != null) {
+                    fos.close();
+                }
+            }
+        result = Constant.SUCCESS;
+        return result;
     }
 
     public void exportSearchUserByApproved(HttpServletResponse response, ExportExcelRequest dto) throws IOException {

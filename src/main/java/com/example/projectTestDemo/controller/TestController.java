@@ -4,9 +4,12 @@ import com.example.projectTestDemo.dtoRequest.TestRequest;
 import com.example.projectTestDemo.dtoRequest.jaxBRequest.ManagePeopleJaxBRequest;
 import com.example.projectTestDemo.dtoRequest.jaxBRequest.ManagePeopleJaxBResponse;
 import com.example.projectTestDemo.dtoResponse.ManagePeopleViewResponse;
+import com.example.projectTestDemo.entity.ManageUser;
 import com.example.projectTestDemo.model.RequestMapper;
+import com.example.projectTestDemo.repository.UserRepository;
 import com.example.projectTestDemo.service.AsyncService;
 import com.example.projectTestDemo.service.ManageDetailVelocityService;
+import com.example.projectTestDemo.service.implement.FileImplement;
 import com.example.projectTestDemo.service.validation.ValidationAbstract;
 import com.example.projectTestDemo.service.validation.ValidatorFactory;
 import com.example.projectTestDemo.tools.EmailUtil;
@@ -14,8 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -32,6 +39,11 @@ public class TestController {
     private ManageDetailVelocityService manageDetailVelocityService;
     @Autowired
     private EmailUtil emailUtil;
+    @Autowired
+    private FileImplement fileImplement;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping(value = "/getDataTest")
     public ValidationAbstract getDataTest(
@@ -88,6 +100,23 @@ public class TestController {
     public void sendEmail(
     ) {
         this.emailUtil.sendSimpleMessage();
+    }
+
+    @RequestMapping(value = "/test2/{id}", method = RequestMethod.GET)
+    public ManageUser test2(
+            @PathVariable(value = "id") Integer id
+    ) {
+        Optional<ManageUser> manageUser = this.userRepository.findById(BigInteger.valueOf(id));
+        Optional<String> opt = Optional.empty();
+        System.out.println(opt);
+        return manageUser.isPresent() ? manageUser.get() : null;
+    }
+
+    @RequestMapping(value = "/testMoveFile", method = RequestMethod.GET)
+    public String testMoveFile(
+            @RequestParam(value = "file") MultipartFile file
+            ) throws IOException {
+       return this.fileImplement.moveFile(file);
     }
 
 }

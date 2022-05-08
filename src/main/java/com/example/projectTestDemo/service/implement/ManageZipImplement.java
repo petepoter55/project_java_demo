@@ -4,6 +4,7 @@ import com.example.projectTestDemo.dtoRequest.UnzipRequest;
 import com.example.projectTestDemo.dtoResponse.Response;
 import com.example.projectTestDemo.entity.ManageUploadTracking;
 import com.example.projectTestDemo.environment.Constant;
+import com.example.projectTestDemo.exception.ResponseException;
 import com.example.projectTestDemo.repository.ManageUploadTrackingRepository;
 
 import com.example.projectTestDemo.service.ManageZipService;
@@ -15,14 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -131,13 +130,14 @@ public class ManageZipImplement implements ManageZipService {
         boolean statusUnzip = true;
         try {
             String fileZip = manageUploadTracking.getPathName();
+            // directory Folder target
             File destinationDirectory = new File("/Users/boonyaris/Desktop/zipproject/UNZIP_" + new UtilityTools().getFormatsDateMilliString2());
             byte[] buffer = new byte[1024];
-            ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));
-            ZipEntry zipEntry = zis.getNextEntry();
+            ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip)); // input zip to ZipInputStream
+            ZipEntry zipEntry = zis.getNextEntry();  // list files in zip
 
             while (zipEntry != null) {
-                File newFile = newFile(destinationDirectory, zipEntry);
+                File newFile = newFiles(destinationDirectory, zipEntry);
                 if (zipEntry.isDirectory()) {
                     if (!newFile.isDirectory() && !newFile.mkdirs()) {
                         throw new IOException("Failed to create directory " + newFile);
@@ -148,7 +148,7 @@ public class ManageZipImplement implements ManageZipService {
                     if (!parent.isDirectory() && !parent.mkdirs()) {
                         throw new IOException("Failed to create directory " + parent);
                     }
-                    // write file content
+                    // write file content to directory target
                     FileOutputStream fos = new FileOutputStream(newFile);
                     int len;
                     while ((len = zis.read(buffer)) > 0) {
@@ -169,7 +169,8 @@ public class ManageZipImplement implements ManageZipService {
         return statusUnzip;
     }
 
-    public static File newFile(File destinationDirectory, ZipEntry zipEntry) throws IOException {
+    public static File newFiles(File destinationDirectory, ZipEntry zipEntry) throws IOException {
+        // This method guards against writing files to the file system outside the target folder.
         File destFile = new File(destinationDirectory, zipEntry.getName());
 
         String destDirPath = destinationDirectory.getCanonicalPath();
@@ -191,9 +192,8 @@ public class ManageZipImplement implements ManageZipService {
            }
         }catch (Exception e){
             logger.error(String.format(Constant.THROW_EXCEPTION,e.getMessage()));
-        }finally {
-
         }
+
         return fileName;
     }
 }
